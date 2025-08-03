@@ -1,3 +1,4 @@
 {
-  "pythonPath": ""
+  "pythonPath": "",
+  "updateUrl": "https://example.com/update.json"
 }

@@ -85,6 +85,20 @@ function getPythonPath() {
     return null;
 }
 
+function getUpdateUrl() {
+    try {
+        const cfgPath = path.join(app.getAppPath(), 'config', 'settings.json');
+        if (fs.existsSync(cfgPath)) {
+            const { updateUrl } = JSON.parse(fs.readFileSync(cfgPath, 'utf-8'));
+            if (updateUrl) {
+                return updateUrl;
+            }
+        }
+    } catch (err) {
+        console.warn('Failed to read update URL from config:', err);
+    }
+    return null;
+}
 async function runPythonScript(scriptName, args) {
     const pythonExe = getPythonPath();
     if (!pythonExe) {
@@ -137,8 +151,13 @@ ipcMain.handle('pdf:watermark', async (event, filePath, options) => {
 });
 
 ipcMain.handle('app:check-update', async () => {
-    const updateUrl = 'https://your-domain.com/path/to/update.json';
+    const updateUrl = getUpdateUrl();
+    if (!updateUrl) {
+        const message = 'Update URL not configured. Please set updateUrl in config/settings.json.';
+        console.error(message);
+        return { success: false, message };
+    }
     return await runPythonScript('notify.py', [updateUrl]);
 });
 
-module.exports = { getPythonPath, runPythonScript };
+module.exports = { getPythonPath, runPythonScript, getUpdateUrl };
