@@ -2,7 +2,6 @@ const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const { spawn } = require('child_process');
 const fs = require('fs');
-const os = require('os');
 
 // --- Helper to get the correct path for bundled or dev environment ---
 function getScriptPath(scriptName) {
@@ -19,28 +18,26 @@ function runPythonScript(scriptName, args) {
         const pythonProcess = spawn('python', [scriptPath, ...args]);
 
         let output = '';
-        let errorOutput = '';
         pythonProcess.stdout.on('data', (data) => {
             output += data.toString();
         });
 
         pythonProcess.stderr.on('data', (data) => {
-            errorOutput += data.toString();
+            console.error(`stderr: ${data}`);
+            // Resolve with an error message if stderr produces data
+            resolve({ success: false, message: `Script error: ${data}` });
         });
 
         pythonProcess.on('close', (code) => {
-            if (errorOutput) {
-                console.error(`Python stderr: ${errorOutput}`);
-            }
-            if (code !== 0 || output === '') {
-                resolve({ success: false, message: `Python script error: ${errorOutput || `Exited with code ${code}`}` });
+            if (code !== 0 && output === '') {
+                resolve({ success: false, message: `Python script exited with code ${code}` });
                 return;
             }
             try {
-                const result = JSON.parse(output);
+                // The output from python is a string, needs to be parsed
+                const result = JSON.parse(output.replace(/'/g, '"'));
                 resolve(result);
             } catch (e) {
-                console.error("Failed to parse Python output:", output);
                 resolve({ success: false, message: 'Failed to parse Python script output.' });
             }
         });
@@ -64,13 +61,18 @@ function createWindow() {
 
 app.whenReady().then(() => {
     createWindow();
+
     app.on('activate', () => {
-        if (BrowserWindow.getAllWindows().length === 0) createWindow();
+        if (BrowserWindow.getAllWindows().length === 0) {
+            createWindow();
+        }
     });
 });
 
 app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') app.quit();
+    if (process.platform !== 'darwin') {
+        app.quit();
+    }
 });
 
 
@@ -103,8 +105,3 @@ ipcMain.handle('split-pdf', (event, filePath, pageRanges) =>
 ipcMain.handle('rotate-pdf', (event, filePath, angle) => 
     handleFileOperation('rotated', 'rotate.py', filePath, angle)
 );
-
-ipcMain.handle('get-pdf-preview', (event, filePath, pageNum) => {
-    const previewDir = path.join(os.tmpdir(), 'pdf-dojo-previews');
-    return runPythonScript('preview.py', [filePath, pageNum, previewDir]);
-});
