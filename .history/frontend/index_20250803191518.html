@@ -13,12 +13,10 @@
     <div class="container">
         <aside class="sidebar">
             <div class="logo">
-                <div class="logo-icon-wrapper">
-                    <span class="logo-icon-text">PD</span>
-                </div>
+                <img src="https://placehold.co/40x40/1e40af/FFFFFF?text=PD" alt="PDF Dojo Logo" class="logo-icon">
                 <div class="logo-text">
                     <span class="logo-main-title">PDF Dojo</span>
-                    <span class="logo-subtitle">by Forge</span>
+                    <span class="logo-subtitle">by Forge.</span>
                 </div>
             </div>
             <nav class="menu">
@@ -34,11 +32,11 @@
                 <a href="#" class="menu-item" data-target="protect">
                     <i data-lucide="shield-check"></i><span>Protect</span>
                 </a>
-            </nav>
+                </nav>
             <div class="sidebar-footer">
                 <div class="sidebar-info">
-                    <a href="https://github.com/your-repo" target="_blank">About Us</a>
-                    <a href="mailto:test@email.com">test@email.com</a>
+                    <a href="https://google.com" target="_blank">About Us</a>
+                    <span>test@email.com</span>
                 </div>
                 <p>v1.0.0</p>
             </div>
@@ -46,43 +44,10 @@
 
         <main class="content">
             <section id="home" class="page active">
-                 <div class="page-content-wrapper-full">
-                    <div class="hero-section">
-                        <h1 id="greeting" class="hero-title">Good morning! 👋</h1>
-                        <p class="hero-subtitle">What would you like to do with your PDFs today?</p>
-                    </div>
-
-                    <div class="tools-list">
-                        <div class="tool-card" data-target="merge">
-                            <div class="tool-card-icon-wrapper" style="--color-from: #3b82f6; --color-to: #2563eb;">
-                                <i data-lucide="files" class="tool-card-icon"></i>
-                            </div>
-                            <h3 class="tool-card-title">Merge PDFs</h3>
-                            <p class="tool-card-description">Combine multiple files</p>
-                        </div>
-                        <div class="tool-card" data-target="compress">
-                            <div class="tool-card-icon-wrapper" style="--color-from: #22c55e; --color-to: #16a34a;">
-                                <i data-lucide="minimize-2" class="tool-card-icon"></i>
-                            </div>
-                            <h3 class="tool-card-title">Compress PDF</h3>
-                            <p class="tool-card-description">Reduce file size</p>
-                        </div>
-                        <div class="tool-card" data-target="protect">
-                            <div class="tool-card-icon-wrapper" style="--color-from: #a855f7; --color-to: #9333ea;">
-                                <i data-lucide="shield" class="tool-card-icon"></i>
-                            </div>
-                            <h3 class="tool-card-title">Protect PDF</h3>
-                            <p class="tool-card-description">Add a password</p>
-                        </div>
-                    </div>
-                    
-                    <div class="home-actions">
-                        <button class="btn btn-primary" onclick="window.open('mailto:test@email.com', '_blank')">
-                            <span>Talk with Us</span>
-                        </button>
-                        <button class="btn btn-secondary" onclick="window.open('https://github.com/your-repo', '_blank')">
-                            <span>Who Are We</span>
-                        </button>
+                <div class="page-content-wrapper">
+                    <div class="welcome-card">
+                        <h1>Welcome to PDF Dojo</h1>
+                        <p>Your all-in-one offline PDF toolkit. Select a tool from the left menu or use keyboard shortcuts (Ctrl+1-4) to get started.</p>
                     </div>
                 </div>
             </section>
@@ -167,15 +132,8 @@
                     </div>
                 </div>
             </section>
-        </main>
-    </div>
-    
-    <div id="drag-overlay" class="drag-overlay">
-        <div class="drag-overlay-content">
-            <i data-lucide="upload" class="drag-overlay-icon"></i>
-            <h3 class="drag-overlay-title">Drop your PDFs here!</h3>
-            <p class="drag-overlay-text">We'll suggest the best tools for your files.</p>
-        </div>
+
+            </main>
     </div>
 
     <script src="../node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>

@@ -1,3 +1,202 @@
+Of course. I've rearranged the home page to match your new layout requirements.
+
+I have moved the "Talk with Us" and "Who Are We" buttons from the sidebar to below the tool cards on the home page. The tool cards themselves have been made smaller and are now arranged horizontally.
+
+Here are the updated index.html and style.css files reflecting these changes.
+
+frontend/index.html
+HTML
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PDF Dojo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon-wrapper">
+                    <span class="logo-icon-text">PD</span>
+                </div>
+                <div class="logo-text">
+                    <span class="logo-main-title">PDF Dojo</span>
+                    <span class="logo-subtitle">by Forge</span>
+                </div>
+            </div>
+            <nav class="menu">
+                <a href="#" class="menu-item active" data-target="home">
+                    <i data-lucide="home"></i><span>Home</span>
+                </a>
+                <a href="#" class="menu-item" data-target="merge">
+                    <i data-lucide="files"></i><span>Merge</span>
+                </a>
+                <a href="#" class="menu-item" data-target="compress">
+                    <i data-lucide="minimize-2"></i><span>Compress</span>
+                </a>
+                <a href="#" class="menu-item" data-target="protect">
+                    <i data-lucide="shield-check"></i><span>Protect</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-info">
+                    <a href="https://github.com/your-repo" target="_blank">About Us</a>
+                    <a href="mailto:test@email.com">test@email.com</a>
+                </div>
+                <p>v1.0.0</p>
+            </div>
+        </aside>
+
+        <main class="content">
+            <section id="home" class="page active">
+                 <div class="page-content-wrapper-full">
+                    <div class="hero-section">
+                        <h1 id="greeting" class="hero-title">Good morning! 👋</h1>
+                        <p class="hero-subtitle">What would you like to do with your PDFs today?</p>
+                    </div>
+
+                    <div class="tools-list">
+                        <div class="tool-card" data-target="merge">
+                            <div class="tool-card-icon-wrapper" style="--color-from: #3b82f6; --color-to: #2563eb;">
+                                <i data-lucide="files" class="tool-card-icon"></i>
+                            </div>
+                            <h3 class="tool-card-title">Merge PDFs</h3>
+                            <p class="tool-card-description">Combine multiple files</p>
+                        </div>
+                        <div class="tool-card" data-target="compress">
+                            <div class="tool-card-icon-wrapper" style="--color-from: #22c55e; --color-to: #16a34a;">
+                                <i data-lucide="minimize-2" class="tool-card-icon"></i>
+                            </div>
+                            <h3 class="tool-card-title">Compress PDF</h3>
+                            <p class="tool-card-description">Reduce file size</p>
+                        </div>
+                        <div class="tool-card" data-target="protect">
+                            <div class="tool-card-icon-wrapper" style="--color-from: #a855f7; --color-to: #9333ea;">
+                                <i data-lucide="shield" class="tool-card-icon"></i>
+                            </div>
+                            <h3 class="tool-card-title">Protect PDF</h3>
+                            <p class="tool-card-description">Add a password</p>
+                        </div>
+                    </div>
+                    
+                    <div class="home-actions">
+                        <button class="btn btn-primary" onclick="window.open('mailto:test@email.com', '_blank')">
+                            <span>Talk with Us</span>
+                        </button>
+                        <button class="btn btn-secondary" onclick="window.open('https://github.com/your-repo', '_blank')">
+                            <span>Who Are We</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="merge" class="page">
+                <div class="page-content-wrapper">
+                    <div class="page-header">
+                        <h1>Merge PDFs</h1>
+                        <p>Combine multiple PDFs into a single, organized document.</p>
+                    </div>
+                    <div class="drop-area" id="merge-drop-area">
+                        <div class="drop-area-content">
+                            <i data-lucide="upload-cloud" class="drop-icon"></i>
+                            <p><b>Drag & drop PDF files anywhere</b>, or click to select.</p>
+                            <span>You can select multiple files</span>
+                        </div>
+                        <input type="file" id="merge-file-input" multiple accept=".pdf" hidden>
+                    </div>
+                    <div class="file-list-container">
+                        <ul class="file-list" id="merge-file-list"></ul>
+                    </div>
+                    <div class="action-bar">
+                        <button id="merge-btn" class="btn btn-primary" disabled>
+                            <i data-lucide="blinds"></i><span>Merge PDFs</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="compress" class="page">
+                <div class="page-content-wrapper">
+                    <div class="page-header">
+                        <h1>Compress PDF</h1>
+                        <p>Reduce the file size of your PDF while maintaining quality.</p>
+                    </div>
+                    <div class="drop-area" id="compress-drop-area">
+                         <div class="drop-area-content">
+                            <i data-lucide="upload-cloud" class="drop-icon"></i>
+                            <p><b>Drag & drop a single PDF anywhere</b>, or click to select.</p>
+                            <span>One file at a time for compression</span>
+                        </div>
+                        <input type="file" id="compress-file-input" accept=".pdf" hidden>
+                    </div>
+                     <div class="file-list-container">
+                        <ul class="file-list" id="compress-file-list"></ul>
+                    </div>
+                    <div class="action-bar">
+                        <button id="compress-btn" class="btn btn-success" disabled>
+                            <i data-lucide="arrow-down-wide-narrow"></i><span>Compress PDF</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="protect" class="page">
+                <div class="page-content-wrapper">
+                     <div class="page-header">
+                        <h1>Protect PDF</h1>
+                        <p>Add a password to your PDF to secure its contents.</p>
+                    </div>
+                    <div class="drop-area" id="protect-drop-area">
+                         <div class="drop-area-content">
+                            <i data-lucide="upload-cloud" class="drop-icon"></i>
+                            <p><b>Drag & drop a single PDF anywhere</b>, or click to select.</p>
+                             <span>Protect one file at a time</span>
+                        </div>
+                        <input type="file" id="protect-file-input" accept=".pdf" hidden>
+                    </div>
+                     <div class="file-list-container">
+                        <ul class="file-list" id="protect-file-list"></ul>
+                    </div>
+                    <div class="form-group">
+                        <label for="password-input">
+                            <i data-lucide="key-round"></i> Set Password
+                        </label>
+                        <input type="password" id="password-input" placeholder="Enter a strong password" disabled>
+                    </div>
+                    <div class="action-bar">
+                        <button id="protect-btn" class="btn btn-primary" disabled>
+                            <i data-lucide="lock"></i><span>Protect PDF</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <div id="drag-overlay" class="drag-overlay">
+        <div class="drag-overlay-content">
+            <i data-lucide="upload" class="drag-overlay-icon"></i>
+            <h3 class="drag-overlay-title">Drop your PDFs here!</h3>
+            <p class="drag-overlay-text">We'll suggest the best tools for your files.</p>
+        </div>
+    </div>
+
+    <script src="../node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <script src="renderer.js"></script>
+    <script>
+      lucide.createIcons();
+    </script>
+</body>
+</html>
+frontend/style.css
+CSS
+
 /* --- MODERN THEME & VARIABLES --- */
 :root {
     /* Primary Colors (Professional Blue) */

@@ -1,0 +1,34 @@
+.home-hero-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 80px;
+  padding-bottom: 40px;
+  text-align: center;
+}
+
+.home-hero-text {
+  margin-bottom: 48px;
+}
+
+.tools-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 32px;
+  width: 100%;
+  max-width: 1000px;
+}
+
+.hero-title {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.hero-subtitle {
+  font-size: 20px;
+  color: var(--text-secondary);
+}

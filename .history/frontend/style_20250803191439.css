@@ -77,7 +77,6 @@ body, html {
     gap: 12px;
     padding: 8px;
     margin-bottom: 16px;
-    border-bottom: 1px solid #1e293b;
 }
 .logo-icon-wrapper {
     width: 40px;
@@ -139,16 +138,11 @@ body, html {
     overflow-y: auto;
     display: flex;
     justify-content: center;
-    align-items: center; /* Center content vertically */
+    align-items: flex-start;
     padding: 48px;
 }
 .page-content-wrapper { width: 100%; max-width: 700px; }
-.page-content-wrapper-full { 
-    width: 100%; 
-    max-width: 900px; 
-    margin: 0 auto;
-    text-align: center;
-}
+.page-content-wrapper-full { width: 100%; max-width: 900px; margin: 0 auto; }
 
 .page { display: none; animation: fadeIn 0.4s ease-out; }
 .page.active { display: block; }
@@ -160,8 +154,8 @@ body, html {
 
 /* --- HOME PAGE STYLES --- */
 .hero-section {
-    text-align: center;
-    padding-bottom: 48px;
+    text-align: left;
+    padding-bottom: 32px;
 }
 .hero-title {
     font-size: 42px;
@@ -175,23 +169,23 @@ body, html {
     margin: 0;
 }
 
-/* --- TOOLS LIST (Horizontal) --- */
-.tools-list {
-    display: flex;
-    justify-content: center;
+/* --- TOOLS GRID --- */
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 24px;
-    flex-wrap: wrap;
 }
 .tool-card {
     background: var(--surface);
     border-radius: var(--radius-xl);
-    padding: 20px;
+    padding: 24px;
     text-align: center;
     border: 1px solid var(--border);
     box-shadow: var(--shadow-md);
     transition: all 0.3s ease;
     cursor: pointer;
-    width: 160px; /* Smaller fixed width */
+    display: flex;
+    flex-direction: column;
 }
 .tool-card:hover {
     transform: translateY(-8px);
@@ -205,7 +199,7 @@ body, html {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 16px;
+    margin: 0 auto 20px;
     background: linear-gradient(135deg, var(--color-from), var(--color-to));
     transition: transform 0.3s ease;
 }
@@ -218,35 +212,45 @@ body, html {
     height: 28px;
 }
 .tool-card-title {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 600;
     color: var(--text-primary);
-    margin: 0 0 4px;
+    margin: 0 0 8px;
 }
 .tool-card-description {
     color: var(--text-secondary);
-    font-size: 13px;
-    line-height: 1.4;
-    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0 0 24px;
+    flex-grow: 1;
 }
-
-/* --- HOME ACTIONS --- */
-.home-actions {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    margin-top: 48px;
-}
-.home-actions .btn {
-    box-shadow: var(--shadow-md);
-}
-.btn-secondary {
-    background: var(--surface);
-    color: var(--text-primary);
+.tool-card-button {
+    width: 100%;
+    background-color: #f8fafc;
+    color: var(--text-secondary);
     border: 1px solid var(--border);
+    padding: 10px;
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
 }
-.btn-secondary:hover:not(:disabled) {
-    background: #f1f5f9;
+.tool-card:hover .tool-card-button {
+    background-color: var(--primary-tint);
+    color: var(--primary);
+    border-color: var(--primary-light);
+}
+.tool-card-arrow {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.2s ease;
+}
+.tool-card:hover .tool-card-arrow {
+    transform: translateX(3px);
 }
 
 
@@ -365,9 +369,10 @@ body, html {
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    box-shadow: var(--shadow-md);
 }
 .btn:hover:not(:disabled) { 
-    transform: translateY(-2px); 
+    transform: translateY(-2px) scale(1.05); 
     box-shadow: var(--shadow-lg); 
 }
 .btn:disabled { 

@@ -7,18 +7,29 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <!-- Icon Library -->
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
     <div class="container">
         <aside class="sidebar">
-            <div class="logo">
-                <div class="logo-icon-wrapper">
-                    <span class="logo-icon-text">PD</span>
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon-wrapper">
+                        <span class="logo-icon-text">PD</span>
+                    </div>
+                    <div class="logo-text">
+                        <span class="logo-main-title">PDF Dojo</span>
+                        <span class="logo-subtitle">by Forge</span>
+                    </div>
                 </div>
-                <div class="logo-text">
-                    <span class="logo-main-title">PDF Dojo</span>
-                    <span class="logo-subtitle">by Forge</span>
+                <div class="sidebar-actions">
+                    <button class="btn btn-primary" onclick="window.open('mailto:test@email.com', '_blank')">
+                        <span>Talk with Us</span>
+                    </button>
+                    <button class="btn btn-secondary" onclick="window.open('https://github.com/your-repo', '_blank')">
+                        <span>Who Are We</span>
+                    </button>
                 </div>
             </div>
             <nav class="menu">
@@ -45,48 +56,58 @@
         </aside>
 
         <main class="content">
+            <!-- Home/Welcome Page -->
             <section id="home" class="page active">
                  <div class="page-content-wrapper-full">
+                    <!-- Hero Section -->
                     <div class="hero-section">
                         <h1 id="greeting" class="hero-title">Good morning! 👋</h1>
                         <p class="hero-subtitle">What would you like to do with your PDFs today?</p>
                     </div>
 
-                    <div class="tools-list">
+                    <!-- Tools Grid -->
+                    <div class="tools-grid">
+                        <!-- Merge Card -->
                         <div class="tool-card" data-target="merge">
                             <div class="tool-card-icon-wrapper" style="--color-from: #3b82f6; --color-to: #2563eb;">
                                 <i data-lucide="files" class="tool-card-icon"></i>
                             </div>
                             <h3 class="tool-card-title">Merge PDFs</h3>
-                            <p class="tool-card-description">Combine multiple files</p>
+                            <p class="tool-card-description">Combine multiple files into one</p>
+                            <button class="tool-card-button">
+                                <span>Get Started</span>
+                                <i data-lucide="arrow-right" class="tool-card-arrow"></i>
+                            </button>
                         </div>
+                        <!-- Compress Card -->
                         <div class="tool-card" data-target="compress">
                             <div class="tool-card-icon-wrapper" style="--color-from: #22c55e; --color-to: #16a34a;">
                                 <i data-lucide="minimize-2" class="tool-card-icon"></i>
                             </div>
                             <h3 class="tool-card-title">Compress PDF</h3>
-                            <p class="tool-card-description">Reduce file size</p>
+                            <p class="tool-card-description">Reduce file size, maintain quality</p>
+                            <button class="tool-card-button">
+                                <span>Get Started</span>
+                                <i data-lucide="arrow-right" class="tool-card-arrow"></i>
+                            </button>
                         </div>
+                        <!-- Protect Card -->
                         <div class="tool-card" data-target="protect">
                             <div class="tool-card-icon-wrapper" style="--color-from: #a855f7; --color-to: #9333ea;">
                                 <i data-lucide="shield" class="tool-card-icon"></i>
                             </div>
                             <h3 class="tool-card-title">Protect PDF</h3>
-                            <p class="tool-card-description">Add a password</p>
+                            <p class="tool-card-description">Add password security to documents</p>
+                            <button class="tool-card-button">
+                                <span>Get Started</span>
+                                <i data-lucide="arrow-right" class="tool-card-arrow"></i>
+                            </button>
                         </div>
-                    </div>
-                    
-                    <div class="home-actions">
-                        <button class="btn btn-primary" onclick="window.open('mailto:test@email.com', '_blank')">
-                            <span>Talk with Us</span>
-                        </button>
-                        <button class="btn btn-secondary" onclick="window.open('https://github.com/your-repo', '_blank')">
-                            <span>Who Are We</span>
-                        </button>
                     </div>
                 </div>
             </section>
 
+            <!-- Other pages remain the same -->
             <section id="merge" class="page">
                 <div class="page-content-wrapper">
                     <div class="page-header">
@@ -170,6 +191,7 @@
         </main>
     </div>
     
+    <!-- Drag & Drop Overlay -->
     <div id="drag-overlay" class="drag-overlay">
         <div class="drag-overlay-content">
             <i data-lucide="upload" class="drag-overlay-icon"></i>
@@ -178,8 +200,11 @@
         </div>
     </div>
 
+    <!-- SweetAlert2 for notifications -->
     <script src="../node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <!-- Renderer Process Script -->
     <script src="renderer.js"></script>
+    <!-- Activate Icons -->
     <script>
       lucide.createIcons();
     </script>

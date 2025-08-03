@@ -1,42 +1,33 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Navigation ---
     const menuItems = document.querySelectorAll('.menu-item');
     const pages = document.querySelectorAll('.page');
-    const toolCards = document.querySelectorAll('.tool-card');
-    const dragOverlay = document.getElementById('drag-overlay');
 
-    // --- Navigation ---
     function navigateTo(targetId) {
-        // Hide all pages and remove active state from menu items
-        pages.forEach(page => page.classList.remove('active'));
         menuItems.forEach(mi => mi.classList.remove('active'));
+        pages.forEach(page => {
+            page.classList.remove('active');
+            // Add fade-out animation
+            page.style.animation = 'fadeOut 0.3s forwards';
+        });
 
-        // Show the target page
         const targetPage = document.getElementById(targetId);
+        const targetMenuItem = document.querySelector(`.menu-item[data-target="${targetId}"]`);
+
         if (targetPage) {
             targetPage.classList.add('active');
+            // Add fade-in animation
+            targetPage.style.animation = 'fadeIn 0.4s ease-out forwards';
         }
-
-        // Highlight the corresponding menu item
-        const targetMenuItem = document.querySelector(`.menu-item[data-target="${targetId}"]`);
         if (targetMenuItem) {
             targetMenuItem.classList.add('active');
         }
     }
 
-    // Menu item click listeners
     menuItems.forEach(item => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
-            const targetId = item.getAttribute('data-target');
-            navigateTo(targetId);
-        });
-    });
-    
-    // Tool card click listeners
-    toolCards.forEach(card => {
-        card.addEventListener('click', () => {
-             const targetId = card.getAttribute('data-target');
-             navigateTo(targetId);
+            navigateTo(item.getAttribute('data-target'));
         });
     });
 
@@ -48,69 +39,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 case '2': navigateTo('merge'); break;
                 case '3': navigateTo('compress'); break;
                 case '4': navigateTo('protect'); break;
+                // case '5': navigateTo('watermark'); break; // Removed
             }
         }
     });
-    
-    // --- Home Page Logic ---
-    function setGreeting() {
-        const greetingEl = document.getElementById('greeting');
-        if (!greetingEl) return;
-        
-        const hour = new Date().getHours();
-        let greetingText = 'Good evening';
-        if (hour < 12) {
-            greetingText = 'Good morning';
-        } else if (hour < 17) {
-            greetingText = 'Good afternoon';
-        }
-        greetingEl.textContent = `${greetingText}! 👋`;
-    }
-    
-    // Set initial greeting
-    setGreeting();
-
-
-    // --- Full-page Drag & Drop ---
-    window.addEventListener('dragenter', (e) => {
-        e.preventDefault();
-        dragOverlay.classList.add('visible');
-    });
-
-    dragOverlay.addEventListener('dragleave', (e) => {
-        // This is tricky because dragleave fires when moving over child elements.
-        // A simple check to see if the related target is outside the window works well.
-        if (e.relatedTarget === null || e.relatedTarget.nodeName === "HTML") {
-            dragOverlay.classList.remove('visible');
-        }
-    });
-    
-    dragOverlay.addEventListener('dragover', (e) => {
-        e.preventDefault(); // Necessary to allow drop
-    });
-
-    dragOverlay.addEventListener('drop', (e) => {
-        e.preventDefault();
-        dragOverlay.classList.remove('visible');
-        
-        const files = Array.from(e.dataTransfer.files).filter(f => f.type === 'application/pdf');
-        if (files.length === 0) return;
-
-        // Simple logic: if more than one file, go to merge. Otherwise, compress.
-        const targetPage = files.length > 1 ? 'merge' : 'compress';
-        navigateTo(targetPage);
-        
-        // Pass files to the target page's handler
-        const filePaths = files.map(f => f.path);
-        const fileInput = document.getElementById(`${targetPage}-file-input`);
-        const dropArea = document.getElementById(`${targetPage}-drop-area`);
-        
-        // To pass the files, we can't directly set the file input's files property.
-        // Instead, we'll trigger a custom event with the file paths.
-        const dropEvent = new CustomEvent('files-dropped', { detail: { paths: filePaths } });
-        dropArea.dispatchEvent(dropEvent);
-    });
-
 
     // --- Notifications ---
     const Toast = Swal.mixin({
@@ -147,45 +79,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Generic File Handling Logic ---
     function setupFileHandling(pageId, isMultiple) {
-        const dropArea = document.getElementById(`${pageId}-drop-area`);
+        const dropZone = document.getElementById(pageId);
         const fileInput = document.getElementById(`${pageId}-file-input`);
         const fileListElem = document.getElementById(`${pageId}-file-list`);
         const actionBtn = document.getElementById(`${pageId}-btn`);
+        const clickArea = document.getElementById(`${pageId}-drop-area`);
         let filePaths = [];
 
         const updateUI = () => {
             fileListElem.innerHTML = '';
             filePaths.forEach(path => {
                 const li = document.createElement('li');
-                li.textContent = path.split(/[/\\]/).pop(); // Works for both Windows and Unix paths
+                li.textContent = path.split(/[\/\\]/).pop();
                 fileListElem.appendChild(li);
             });
             const isReady = isMultiple ? filePaths.length > 1 : filePaths.length > 0;
             if(actionBtn) actionBtn.disabled = !isReady;
             if(pageId === 'protect') document.getElementById('password-input').disabled = !isReady;
+            // Watermark UI logic is no longer needed
         };
         
-        if (dropArea) dropArea.addEventListener('click', () => fileInput.click());
+        if (clickArea) clickArea.addEventListener('click', () => fileInput.click());
         
-        dropArea.addEventListener('dragover', (e) => { e.preventDefault(); e.stopPropagation(); dropArea.parentElement.classList.add('highlight'); });
-        dropArea.addEventListener('dragleave', (e) => { e.preventDefault(); e.stopPropagation(); dropArea.parentElement.classList.remove('highlight'); });
-        dropArea.addEventListener('drop', (e) => {
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); e.stopPropagation(); dropZone.classList.add('highlight'); });
+        dropZone.addEventListener('dragleave', (e) => { e.preventDefault(); e.stopPropagation(); dropZone.classList.remove('highlight'); });
+        dropZone.addEventListener('drop', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            dropArea.parentElement.classList.remove('highlight');
+            dropZone.classList.remove('highlight');
             const files = Array.from(e.dataTransfer.files).filter(f => f.type === 'application/pdf');
             filePaths = isMultiple ? files.map(f => f.path) : (files.length > 0 ? [files[0].path] : []);
             updateUI();
         });
-        
-        // Listen for the custom drop event from the overlay
-        dropArea.addEventListener('files-dropped', (e) => {
-            filePaths = e.detail.paths;
-            updateUI();
-        });
-
-        fileInput.addEventListener('change', () => {
-            const files = Array.from(fileInput.files);
+        fileInput.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
             filePaths = isMultiple ? files.map(f => f.path) : (files.length > 0 ? [files[0].path] : []);
             updateUI();
         });
@@ -216,30 +143,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const protectHandler = setupFileHandling('protect', false);
     document.getElementById('protect-btn').addEventListener('click', async (e) => {
         const password = document.getElementById('password-input').value;
-        if (!password) { Swal.fire({ icon: 'warning', title: 'Password Required', text: 'Please enter a password to protect the file.' }); return; }
+        if (!password) { Swal.fire({ icon: 'warning', title: 'Password Required' }); return; }
         showLoading('Protecting PDF...', e.currentTarget);
         const result = await window.electronAPI.protectPDF(protectHandler.getFiles()[0], password);
         handleResponse(result, e.currentTarget);
         if (result.success) { protectHandler.reset(); document.getElementById('password-input').value = ''; }
     });
     
+    // Watermark handler is now removed
+
     // --- Update Check ---
     async function checkForUpdates() {
-        try {
-            const result = await window.electronAPI.checkForUpdate();
-            if (result && result.isNewVersion) {
-                Swal.fire({ 
-                    title: `Update Available: v${result.latestVersion}`, 
-                    text: result.message, 
-                    icon: 'info', 
-                    showCancelButton: true, 
-                    confirmButtonText: 'Download',
-                    confirmButtonColor: 'var(--primary)'
-                });
-            }
-        } catch (error) {
-            console.error("Update check failed:", error);
+        const result = await window.electronAPI.checkForUpdate();
+        if (result && result.isNewVersion) {
+            Swal.fire({ title: `Update Available: v${result.latestVersion}`, text: result.message, icon: 'info', showCancelButton: true, confirmButtonText: 'Download' });
         }
     }
-    setTimeout(checkForUpdates, 5000); // Check for updates 5 seconds after launch
+    setTimeout(checkForUpdates, 3000);
 });
