@@ -82,7 +82,7 @@ body, html {
 .logo-icon-wrapper {
     width: 40px;
     height: 40px;
-    background-color:#490386; /* Changed to blue */
+    background-color: var(--primary); /* Changed to blue */
     border-radius: var(--radius-md);
     display: flex;
     align-items: center;
