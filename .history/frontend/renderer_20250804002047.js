@@ -31,79 +31,116 @@ document.addEventListener('DOMContentLoaded', () => {
         else Swal.fire({ icon: 'error', title: 'An Error Occurred', text: result.message, confirmButtonColor: 'var(--primary)' });
     }
 
-    // --- Unified File Handling Logic ---
-    function setupFileHandling(pageId, { isMultiple = false, onFileLoad = null, isInteractive = false } = {}) {
+    // --- File Handling for pages with previews (Split, Rotate) ---
+    function setupPreviewFileHandling(pageId, onFileLoad) {
         const dropArea = document.getElementById(`${pageId}-drop-area`);
         const fileInput = document.getElementById(`${pageId}-file-input`);
-        const fileListElem = document.getElementById(`${pageId}-file-list`);
         const actionBtn = document.getElementById(`${pageId}-btn`);
         const clearBtn = document.getElementById(`clear-${pageId}-btn`);
         const extraInputs = document.querySelectorAll(`#${pageId} .form-group input, #${pageId} .form-group select`);
-        
-        let files = []; // Always use an array of objects { path, id }
+        let filePath = null;
 
         const reset = () => {
-            files = [];
+            filePath = null;
             fileInput.value = '';
             if (onFileLoad) onFileLoad(null);
             updateUI();
         };
 
         const updateUI = () => {
-            if (fileListElem) {
-                fileListElem.innerHTML = '';
-                files.forEach(file => {
-                    const li = document.createElement('li');
-                    li.dataset.id = file.id;
-                    if (isInteractive) {
-                        li.setAttribute('draggable', true);
-                        li.innerHTML = `
-                            <div class="file-list-item-content">
-                                <i data-lucide="grip-vertical" class="drag-handle"></i>
-                                <span>${file.path.split(/[/\\]/).pop()}</span>
-                            </div>
-                            <button class="remove-file-btn" data-id="${file.id}"><i data-lucide="x"></i></button>
-                        `;
-                    } else {
-                        li.textContent = file.path.split(/[/\\]/).pop();
-                    }
-                    fileListElem.appendChild(li);
-                });
-                if (isInteractive) lucide.createIcons();
-            }
-            
-            const isReady = isMultiple ? files.length > 1 : files.length > 0;
+            const isReady = !!filePath;
             if (actionBtn) actionBtn.disabled = !isReady;
             extraInputs.forEach(input => input.disabled = !isReady);
         };
 
-        const handleFiles = (newFiles) => {
-            if (isMultiple) {
-                newFiles.forEach(file => files.push({ path: file.path, id: Date.now() + Math.random() }));
-            } else {
-                files = newFiles.length > 0 ? [{ path: newFiles[0].path, id: Date.now() }] : [];
-            }
+        const handleFiles = (files) => {
+            filePath = files.length > 0 ? files[0].path : null;
             updateUI();
-            if (onFileLoad && files.length > 0) onFileLoad(files[0].path);
+            if (onFileLoad && filePath) onFileLoad(filePath);
         };
 
-        if (isInteractive) {
-            fileListElem.addEventListener('click', (e) => {
-                const removeBtn = e.target.closest('.remove-file-btn');
-                if (removeBtn) {
-                    const idToRemove = Number(removeBtn.dataset.id);
-                    files = files.filter(f => f.id !== idToRemove);
-                    updateUI();
-                }
-            });
+        if (dropArea) dropArea.addEventListener('click', () => fileInput.click());
+        dropArea.addEventListener('dragover', (e) => { e.preventDefault(); e.stopPropagation(); dropArea.classList.add('highlight'); });
+        dropArea.addEventListener('dragleave', (e) => { e.preventDefault(); e.stopPropagation(); dropArea.classList.remove('highlight'); });
+        dropArea.addEventListener('drop', (e) => { e.preventDefault(); e.stopPropagation(); dropArea.classList.remove('highlight'); handleFiles(Array.from(e.dataTransfer.files).filter(f => f.type === 'application/pdf')); });
+        fileInput.addEventListener('change', () => handleFiles(Array.from(fileInput.files)));
+        if (clearBtn) clearBtn.addEventListener('click', reset);
 
-            let dragSrcEl = null;
-            fileListElem.addEventListener('dragstart', (e) => { dragSrcEl = e.target; e.dataTransfer.effectAllowed = 'move'; e.target.classList.add('dragging'); });
-            fileListElem.addEventListener('dragend', (e) => e.target.classList.remove('dragging'));
-            fileListElem.addEventListener('dragover', (e) => { e.preventDefault(); const target = e.target.closest('li'); if (target && target !== dragSrcEl) { const rect = target.getBoundingClientRect(); const next = (e.clientY - rect.top) / (rect.bottom - rect.top) > .5; fileListElem.insertBefore(dragSrcEl, next && target.nextSibling || target); } });
-            fileListElem.addEventListener('drop', (e) => { e.preventDefault(); const newOrder = [...fileListElem.querySelectorAll('li')].map(li => Number(li.dataset.id)); files.sort((a, b) => newOrder.indexOf(a.id) - newOrder.indexOf(b.id)); updateUI(); });
-        }
-        
+        return { getFiles: () => [filePath], reset };
+    }
+    
+    // --- File Handling for Interactive Merge List ---
+    function setupMergeFileHandling() {
+        const pageId = 'merge';
+        const dropArea = document.getElementById(`${pageId}-drop-area`);
+        const fileInput = document.getElementById(`${pageId}-file-input`);
+        const fileListElem = document.getElementById(`${pageId}-file-list`);
+        const actionBtn = document.getElementById(`${pageId}-btn`);
+        const clearBtn = document.getElementById(`clear-${pageId}-btn`);
+        let files = []; // Array of objects: { path: string, id: number }
+
+        const reset = () => {
+            files = [];
+            fileInput.value = '';
+            updateUI();
+        };
+
+        const updateUI = () => {
+            fileListElem.innerHTML = '';
+            files.forEach(file => {
+                const li = document.createElement('li');
+                li.setAttribute('draggable', true);
+                li.dataset.id = file.id;
+                li.innerHTML = `
+                    <div class="file-list-item-content">
+                        <i data-lucide="grip-vertical" class="drag-handle"></i>
+                        <span>${file.path.split(/[/\\]/).pop()}</span>
+                    </div>
+                    <button class="remove-file-btn" data-id="${file.id}"><i data-lucide="x"></i></button>
+                `;
+                fileListElem.appendChild(li);
+            });
+            lucide.createIcons(); // Re-render icons
+            actionBtn.disabled = files.length < 2;
+        };
+
+        const handleFiles = (newFiles) => {
+            newFiles.forEach(file => files.push({ path: file.path, id: Date.now() + Math.random() }));
+            updateUI();
+        };
+
+        fileListElem.addEventListener('click', (e) => {
+            const removeBtn = e.target.closest('.remove-file-btn');
+            if (removeBtn) {
+                const idToRemove = Number(removeBtn.dataset.id);
+                files = files.filter(f => f.id !== idToRemove);
+                updateUI();
+            }
+        });
+
+        let dragSrcEl = null;
+        fileListElem.addEventListener('dragstart', (e) => {
+            dragSrcEl = e.target;
+            e.dataTransfer.effectAllowed = 'move';
+            e.target.classList.add('dragging');
+        });
+        fileListElem.addEventListener('dragend', (e) => e.target.classList.remove('dragging'));
+        fileListElem.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            const target = e.target.closest('li');
+            if (target && target !== dragSrcEl) {
+                const rect = target.getBoundingClientRect();
+                const next = (e.clientY - rect.top) / (rect.bottom - rect.top) > .5;
+                fileListElem.insertBefore(dragSrcEl, next && target.nextSibling || target);
+            }
+        });
+        fileListElem.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const newOrder = [...fileListElem.querySelectorAll('li')].map(li => Number(li.dataset.id));
+            files.sort((a, b) => newOrder.indexOf(a.id) - newOrder.indexOf(b.id));
+            updateUI();
+        });
+
         if (dropArea) dropArea.addEventListener('click', () => fileInput.click());
         dropArea.addEventListener('dragover', (e) => { e.preventDefault(); e.stopPropagation(); dropArea.classList.add('highlight'); });
         dropArea.addEventListener('dragleave', (e) => { e.preventDefault(); e.stopPropagation(); dropArea.classList.remove('highlight'); });
@@ -136,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (result.success) {
                 const img = document.createElement('img');
-                img.src = `${result.filePath.replace(/\\/g, '/')}?t=${new Date().getTime()}`;
+                img.src = `${result.filePath.replace(/\\/g, '/')}?t=${new Date().getTime()}`; // Cache bust
                 if (pageId === 'split') {
                     if (selectedPages.has(pageNum + 1)) img.classList.add('selected');
                     img.addEventListener('click', () => {
@@ -180,12 +217,12 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // --- Setup for all pages ---
-    const mergeHandler = setupFileHandling('merge', { isMultiple: true, isInteractive: true });
-    const compressHandler = setupFileHandling('compress');
-    const protectHandler = setupFileHandling('protect');
-    const splitHandler = setupFileHandling('split', { onFileLoad: setupPreview('split') });
-    const rotateHandler = setupFileHandling('rotate', { onFileLoad: setupPreview('rotate') });
+    // --- Setup for pages ---
+    const mergeHandler = setupMergeFileHandling();
+    const compressHandler = setupSimpleFileHandling('compress');
+    const protectHandler = setupSimpleFileHandling('protect');
+    const splitHandler = setupPreviewFileHandling('split', setupPreview('split'));
+    const rotateHandler = setupPreviewFileHandling('rotate', setupPreview('rotate'));
 
     // --- Event Listeners for Buttons ---
     document.getElementById('merge-btn').addEventListener('click', async () => { showLoading('Merging PDFs...'); const res = await window.electronAPI.mergePDFs(mergeHandler.getFiles()); handleResponse(res); if (res.success) mergeHandler.reset(); });
