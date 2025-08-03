@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PDF Toolkit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo"><h2>PDF Toolkit</h2></div>
+            <nav class="menu">
+                <a href="#" class="menu-item active" data-target="merge">Merge</a>
+                <a href="#" class="menu-item" data-target="compress">Compress</a>
+                <a href="#" class="menu-item" data-target="protect">Protect</a>
+                <a href="#" class="menu-item" data-target="watermark">Watermark</a>
+            </nav>
+        </aside>
+        <main class="content">
+            <section id="merge" class="page active">
+                <h1>Merge PDFs</h1><p>Combine multiple PDFs into a single document.</p>
+                <div class="drop-area" id="merge-drop-area"><p>Drag & drop PDF files here, or click to select.</p><input type="file" id="merge-file-input" multiple accept=".pdf" hidden></div>
+                <ul class="file-list" id="merge-file-list"></ul><button id="merge-btn" class="btn-primary" disabled>Merge PDFs</button>
+            </section>
+            <section id="compress" class="page">
+                <h1>Compress PDF</h1><p>Reduce the file size of a PDF.</p>
+                <div class="drop-area" id="compress-drop-area"><p>Drag & drop a single PDF here, or click to select.</p><input type="file" id="compress-file-input" accept=".pdf" hidden></div>
+                <ul class="file-list" id="compress-file-list"></ul><button id="compress-btn" class="btn-primary" disabled>Compress PDF</button>
+            </section>
+            <section id="protect" class="page">
+                <h1>Protect PDF</h1><p>Add a password to a PDF file.</p>
+                <div class="drop-area" id="protect-drop-area"><p>Drag & drop a single PDF here, or click to select.</p><input type="file" id="protect-file-input" accept=".pdf" hidden></div>
+                <ul class="file-list" id="protect-file-list"></ul>
+                <div class="form-group"><label for="password-input">Password:</label><input type="password" id="password-input" placeholder="Enter password" disabled></div>
+                <button id="protect-btn" class="btn-primary" disabled>Protect PDF</button>
+            </section>
+            <section id="watermark" class="page">
+                <h1>Add Watermark</h1><p>Stamp a text watermark onto every page of a PDF.</p>
+                <div class="drop-area" id="watermark-drop-area"><p>Drag & drop a single PDF here, or click to select.</p><input type="file" id="watermark-file-input" accept=".pdf" hidden></div>
+                <ul class="file-list" id="watermark-file-list"></ul>
+                <div class="watermark-options">
+                    <div class="form-group"><label for="watermark-text">Watermark Text:</label><input type="text" id="watermark-text" placeholder="e.g., CONFIDENTIAL" disabled></div>
+                    <div class="form-group"><label for="watermark-orientation">Orientation:</label><select id="watermark-orientation" disabled><option value="diagonal">Diagonal</option><option value="horizontal">Horizontal</option><option value="vertical">Vertical</option></select></div>
+                    <div class="form-group"><label for="watermark-size">Font Size:</label><select id="watermark-size" disabled><option value="small">Small</option><option value="medium" selected>Medium</option><option value="large">Large</option></select></div>
+                </div>
+                <button id="watermark-btn" class="btn-primary" disabled>Add Watermark</button>
+            </section>
+        </main>
+    </div>
+    <script src="../node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <script src="renderer.js"></script>
+</body>
+</html>

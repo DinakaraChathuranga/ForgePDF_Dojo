@@ -1,0 +1,49 @@
+# package.json
+Set-Content -Path "package.json" -Value @"
+{
+  "name": "pdf-toolkit",
+  "version": "1.0.0",
+  "description": "A portable desktop PDF utility tool.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "keywords": [
+    "PDF",
+    "Toolkit",
+    "Electron",
+    "Python"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1"
+  },
+  "dependencies": {
+    "python-shell": "^5.0.0",
+    "sweetalert2": "^11.10.1"
+  },
+  "build": {
+    "appId": "com.yourcompany.pdftoolkit",
+    "productName": "PDF Toolkit",
+    "files": [
+      "**/*",
+      "!dist/",
+      "!config/"
+    ],
+    "extraResources": [
+      {
+        "from": "./backend",
+        "to": "backend"
+      }
+    ],
+    "win": {
+      "target": "portable",
+      "icon": "assets/icon.ico"
+    }
+  }
+}
+"@
