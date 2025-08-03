@@ -1,7 +1,22 @@
-import sys, json, urllib.request, socket, logging
+import sys, json, urllib.request, socket, logging, os
 from packaging.version import Version, InvalidVersion
 
-CURRENT_VERSION = "1.0.0"
+
+def _load_current_version():
+    env_version = os.getenv("APP_VERSION")
+    if env_version:
+        return env_version
+
+    config_path = os.path.join(os.path.dirname(__file__), "..", "package.json")
+    try:
+        with open(config_path) as f:
+            return json.load(f).get("version", "0.0.0")
+    except Exception:
+        logging.exception("Failed to read app version")
+        return "0.0.0"
+
+
+CURRENT_VERSION = _load_current_version()
 
 
 def check_for_updates(url, timeout=5):
@@ -14,6 +29,7 @@ def check_for_updates(url, timeout=5):
         logging.warning("Timeout checking for updates", exc_info=True)
         return {"isNewVersion": False}
     except Exception:
+        logging.exception("Unexpected error checking for updates")
         return {"isNewVersion": False}
 
     latest = data.get("latestVersion")
