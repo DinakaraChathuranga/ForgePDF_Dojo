@@ -130,13 +130,6 @@ ipcMain.handle('pdf:protect', async (event, filePath, password) => {
     return await runPythonScript('protect.py', [filePath, outputPath, password]);
 });
 
-// ipcMain.handle('pdf:watermark', async (event, filePath, options) => {
-//     const defaultPath = filePath.replace('.pdf', '-watermarked.pdf');
-//     const { filePath: outputPath, canceled } = await dialog.showSaveDialog({ title: 'Save Watermarked PDF', buttonLabel: 'Save', defaultPath: defaultPath, filters: [{ name: 'PDFs', extensions: ['pdf'] }] });
-//     if (canceled || !outputPath) return { success: false, message: 'Save operation canceled.' };
-//     return await runPythonScript('watermark.py', [filePath, outputPath, JSON.stringify(options)]);
-// });
-
 ipcMain.handle('app:check-update', async () => {
     const updateUrl = 'https://your-domain.com/path/to/update.json';
     return await runPythonScript('notify.py', [updateUrl]);
