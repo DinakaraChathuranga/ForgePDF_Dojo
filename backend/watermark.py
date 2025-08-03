@@ -14,38 +14,36 @@ def add_watermark(input_path, output_path, options_json):
         rotations = {"diagonal": 45, "horizontal": 0, "vertical": 90}
         angle = rotations.get(orientation, 45)
 
-        doc = fitz.open(input_path)
-        
-        for page in doc:
-            # Create a shape to draw on
-            shape = page.new_shape()
-            
-            # Manually calculate the center of the page rectangle
-            page_rect = page.rect
-            center_point = fitz.Point(page_rect.width / 2, page_rect.height / 2)
+        with fitz.open(input_path) as doc:
+            for page in doc:
+                # Create a shape to draw on
+                shape = page.new_shape()
 
-            # --- Set Shape Properties (The Robust Method) ---
-            # These properties are set on the shape before drawing
-            shape.fill_color = (0.8, 0.8, 0.8)  # Set fill color to gray
-            shape.stroke_opacity = 0.5          # Set transparency for the text outline
-            shape.fill_opacity = 0.5            # Set transparency for the text fill
+                # Manually calculate the center of the page rectangle
+                page_rect = page.rect
+                center_point = fitz.Point(page_rect.width / 2, page_rect.height / 2)
 
-            # Insert the text using the shape's properties
-            # Note: We no longer pass color or opacity here
-            shape.insert_text(
-                center_point,
-                text,
-                fontname="helv",
-                fontsize=font_size,
-                rotate=angle,
-                align=fitz.TEXT_ALIGN_CENTER
-            )
+                # --- Set Shape Properties (The Robust Method) ---
+                # These properties are set on the shape before drawing
+                shape.fill_color = (0.8, 0.8, 0.8)  # Set fill color to gray
+                shape.stroke_opacity = 0.5          # Set transparency for the text outline
+                shape.fill_opacity = 0.5            # Set transparency for the text fill
 
-            # Apply the shape with its properties to the page
-            shape.commit()
+                # Insert the text using the shape's properties
+                # Note: We no longer pass color or opacity here
+                shape.insert_text(
+                    center_point,
+                    text,
+                    fontname="helv",
+                    fontsize=font_size,
+                    rotate=angle,
+                    align=fitz.TEXT_ALIGN_CENTER
+                )
 
-        doc.save(output_path)
-        doc.close()
+                # Apply the shape with its properties to the page
+                shape.commit()
+
+            doc.save(output_path)
         return {"success": True, "message": "Watermark added successfully."}
         
     except Exception as e:
