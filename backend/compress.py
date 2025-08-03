@@ -2,8 +2,8 @@ import sys, json, fitz, os
 def compress_pdf(in_path, out_path):
     try:
         initial = os.path.getsize(in_path)
-        doc = fitz.open(in_path)
-        doc.save(out_path, garbage=4, deflate=True, clean=True)
+        with fitz.open(in_path) as doc:
+            doc.save(out_path, garbage=4, deflate=True, clean=True)
         final = os.path.getsize(out_path)
         reduction = (initial - final) / initial * 100 if initial > 0 else 0
         return {"success": True, "message": f"Compressed by {reduction:.1f}%. New size: {final/1024:.1f} KB"}
