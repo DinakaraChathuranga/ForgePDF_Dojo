@@ -17,31 +17,26 @@ def add_watermark(input_path, output_path, options_json):
         doc = fitz.open(input_path)
         
         for page in doc:
-            # Create a shape to draw on
+            # --- Text insertion logic for rotated text ---
             shape = page.new_shape()
             
             # Manually calculate the center of the page rectangle
             page_rect = page.rect
             center_point = fitz.Point(page_rect.width / 2, page_rect.height / 2)
-
-            # --- Set Shape Properties (The Robust Method) ---
-            # These properties are set on the shape before drawing
-            shape.fill_color = (0.8, 0.8, 0.8)  # Set fill color to gray
-            shape.stroke_opacity = 0.5          # Set transparency for the text outline
-            shape.fill_opacity = 0.5            # Set transparency for the text fill
-
-            # Insert the text using the shape's properties
-            # Note: We no longer pass color or opacity here
+            
+            # Insert the text with rotation at the calculated center
             shape.insert_text(
                 center_point,
                 text,
                 fontname="helv",
                 fontsize=font_size,
                 rotate=angle,
+                color=(0.8, 0.8, 0.8), # Gray color
+                opacity=0.5,
                 align=fitz.TEXT_ALIGN_CENTER
             )
 
-            # Apply the shape with its properties to the page
+            # Apply the shape to the page
             shape.commit()
 
         doc.save(output_path)
@@ -49,8 +44,7 @@ def add_watermark(input_path, output_path, options_json):
         return {"success": True, "message": "Watermark added successfully."}
         
     except Exception as e:
-        # Provide a more detailed error message for debugging
-        return {"success": False, "message": f"An error occurred in the watermark script: {str(e)}"}
+        return {"success": False, "message": f"An error occurred: {str(e)}"}
 
 if __name__ == "__main__":
     result = add_watermark(sys.argv[1], sys.argv[2], sys.argv[3])
