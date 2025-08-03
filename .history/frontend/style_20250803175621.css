@@ -4,12 +4,10 @@
     --primary: #1e40af;
     --primary-hover: #1d4ed8;
     --primary-light: #3b82f6;
-    --primary-tint: #dbeafe;
 
     /* Success Colors (Tech Green) */
     --success: #047857;
     --success-hover: #059669;
-    --success-tint: #d1fae5;
 
     /* Accent Colors (Premium Purple) */
     --accent: #7c3aed;
@@ -155,7 +153,7 @@ body, html {
 }
 .page.highlight .drop-area {
     border-color: var(--primary);
-    background-color: var(--primary-tint);
+    background-color: #dbeafe; /* primary-tint */
     transform: scale(1.02);
     box-shadow: var(--shadow-lg);
 }
@@ -215,8 +213,9 @@ body, html {
 
 .form-group { margin-top: 24px; }
 .form-group label { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-weight: 500; }
-input[type="password"], input[type="text"], select {
+input[type="password"], select {
     width: 100%;
+    max-width: 400px;
     box-sizing: border-box;
     padding: 12px;
     border: 1px solid var(--border);
@@ -241,23 +240,3 @@ input:disabled, select:disabled { background-color: var(--background); cursor: n
     box-shadow: var(--shadow-lg);
 }
 .welcome-card h1 { color: var(--primary); }
-
-/* --- LOADING STATES --- */
-.btn.loading > * {
-    visibility: hidden;
-}
-.btn.loading::after {
-    content: '';
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    top: 50%;
-    left: 50%;
-    margin-left: -10px;
-    margin-top: -10px;
-    border: 2px solid rgba(255, 255, 255, 0.5);
-    border-top: 2px solid #ffffff;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }

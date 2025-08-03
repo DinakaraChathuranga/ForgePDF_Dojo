@@ -215,8 +215,9 @@ body, html {
 
 .form-group { margin-top: 24px; }
 .form-group label { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-weight: 500; }
-input[type="password"], input[type="text"], select {
+input[type="password"], select {
     width: 100%;
+    max-width: 400px;
     box-sizing: border-box;
     padding: 12px;
     border: 1px solid var(--border);
@@ -243,7 +244,7 @@ input:disabled, select:disabled { background-color: var(--background); cursor: n
 .welcome-card h1 { color: var(--primary); }
 
 /* --- LOADING STATES --- */
-.btn.loading > * {
+.btn.loading > span {
     visibility: hidden;
 }
 .btn.loading::after {

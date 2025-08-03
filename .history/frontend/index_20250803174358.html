@@ -14,7 +14,7 @@
     <div class="container">
         <aside class="sidebar">
             <div class="logo">
-                <img src="https://placehold.co/40x40/1e40af/FFFFFF?text=PD" alt="PDF Dojo Logo" class="logo-icon">
+                <img src="https://placehold.co/40x40/5B21B6/FFFFFF?text=PD" alt="PDF Dojo Logo" class="logo-icon">
                 <div class="logo-text">
                     <span class="logo-main-title">PDF Dojo</span>
                     <span class="logo-subtitle">by Forge.</span>
@@ -33,9 +33,6 @@
                 <a href="#" class="menu-item" data-target="protect">
                     <i data-lucide="shield-check"></i><span>Protect</span>
                 </a>
-                <!-- <a href="#" class="menu-item" data-target="watermark">
-                    <i data-lucide="droplets"></i><span>Watermark</span>
-                </a> -->
             </nav>
             <div class="sidebar-footer">
                 <div class="sidebar-info">
@@ -52,7 +49,7 @@
                 <div class="page-content-wrapper">
                     <div class="welcome-card">
                         <h1>Welcome to PDF Dojo</h1>
-                        <p>Your all-in-one offline PDF toolkit. Select a tool from the left menu or use keyboard shortcuts (Ctrl+1-4) to get started.</p>
+                        <p>Your all-in-one offline PDF toolkit. Select a tool from the left menu to get started.</p>
                     </div>
                 </div>
             </section>
@@ -76,8 +73,8 @@
                         <ul class="file-list" id="merge-file-list"></ul>
                     </div>
                     <div class="action-bar">
-                        <button id="merge-btn" class="btn btn-primary" disabled>
-                            <i data-lucide="blinds"></i><span>Merge PDFs</span>
+                        <button id="merge-btn" class="btn-primary" disabled>
+                            <i data-lucide="blinds"></i> Merge PDFs
                         </button>
                     </div>
                 </div>
@@ -102,8 +99,8 @@
                         <ul class="file-list" id="compress-file-list"></ul>
                     </div>
                     <div class="action-bar">
-                        <button id="compress-btn" class="btn btn-success" disabled>
-                            <i data-lucide="arrow-down-wide-narrow"></i><span>Compress PDF</span>
+                        <button id="compress-btn" class="btn-primary" disabled>
+                            <i data-lucide="arrow-down-wide-narrow"></i> Compress PDF
                         </button>
                     </div>
                 </div>
@@ -134,52 +131,12 @@
                         <input type="password" id="password-input" placeholder="Enter a strong password" disabled>
                     </div>
                     <div class="action-bar">
-                        <button id="protect-btn" class="btn btn-primary" disabled>
-                            <i data-lucide="lock"></i><span>Protect PDF</span>
+                        <button id="protect-btn" class="btn-primary" disabled>
+                            <i data-lucide="lock"></i> Protect PDF
                         </button>
                     </div>
                 </div>
             </section>
-
-            <!-- Watermark Section (Hidden) -->
-            <!--
-            <section id="watermark" class="page">
-                <div class="page-content-wrapper">
-                     <div class="page-header">
-                        <h1>Add Watermark</h1>
-                        <p>Stamp a text watermark onto every page of a PDF.</p>
-                    </div>
-                    <div class="drop-area" id="watermark-drop-area">
-                         <div class="drop-area-content">
-                            <i data-lucide="upload-cloud" class="drop-icon"></i>
-                            <p><b>Drag & drop a single PDF anywhere</b>, or click to select.</p>
-                             <span>Watermark one file at a time</span>
-                        </div>
-                        <input type="file" id="watermark-file-input" accept=".pdf" hidden>
-                    </div>
-                     <div class="file-list-container">
-                        <ul class="file-list" id="watermark-file-list"></ul>
-                    </div>
-                    <div class="form-group">
-                        <label for="watermark-text">Watermark Text:</label>
-                        <input type="text" id="watermark-text" placeholder="e.g., CONFIDENTIAL" disabled>
-                    </div>
-                    <div class="form-group">
-                         <label for="watermark-orientation">Orientation:</label>
-                        <select id="watermark-orientation" disabled>
-                            <option value="diagonal">Diagonal</option>
-                            <option value="horizontal">Horizontal</option>
-                            <option value="vertical">Vertical</option>
-                        </select>
-                    </div>
-                    <div class="action-bar">
-                        <button id="watermark-btn" class="btn btn-accent" disabled>
-                            <i data-lucide="droplets"></i><span>Add Watermark</span>
-                        </button>
-                    </div>
-                </div>
-            </section>
-            -->
         </main>
     </div>
 

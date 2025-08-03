@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 case '2': navigateTo('merge'); break;
                 case '3': navigateTo('compress'); break;
                 case '4': navigateTo('protect'); break;
-                // case '5': navigateTo('watermark'); break; // Removed
+                case '5': navigateTo('watermark'); break;
             }
         }
     });
@@ -86,7 +86,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const isReady = isMultiple ? filePaths.length > 1 : filePaths.length > 0;
             if(actionBtn) actionBtn.disabled = !isReady;
             if(pageId === 'protect') document.getElementById('password-input').disabled = !isReady;
-            // Watermark UI logic is no longer needed
+            if(pageId === 'watermark') {
+                document.getElementById('watermark-text').disabled = !isReady;
+                document.getElementById('watermark-orientation').disabled = !isReady;
+            }
         };
         
         if (clickArea) clickArea.addEventListener('click', () => fileInput.click());
@@ -140,7 +143,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (result.success) { protectHandler.reset(); document.getElementById('password-input').value = ''; }
     });
     
-    // Watermark handler is now removed
+    const watermarkHandler = setupFileHandling('watermark', false);
+    document.getElementById('watermark-btn').addEventListener('click', async (e) => {
+        const options = {
+            text: document.getElementById('watermark-text').value,
+            orientation: document.getElementById('watermark-orientation').value
+        };
+        if (!options.text) { Swal.fire({ icon: 'warning', title: 'Watermark text is required.' }); return; }
+        showLoading('Adding Watermark...', e.currentTarget);
+        const result = await window.electronAPI.watermarkPDF(watermarkHandler.getFiles()[0], options);
+        handleResponse(result, e.currentTarget);
+        if (result.success) watermarkHandler.reset();
+    });
 
     // --- Update Check ---
     async function checkForUpdates() {
