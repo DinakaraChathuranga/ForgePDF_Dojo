@@ -47,8 +47,7 @@ def add_watermark(input_path, output_path, options_json):
             tw.append(start_pos, text, font=font, fontsize=font_size)
             
             # 7. Write the text to the page, applying the final transformation matrix
-            # This is the key step for older library versions
-            tw.write_text(page, transform=mat)
+            tw.write_text(page, matrix=mat)
 
         doc.save(output_path)
         doc.close()
