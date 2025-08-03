@@ -1,4 +1,6 @@
-import sys, json, fitz, os
+import sys, json, fitz, os, logging
+
+
 def compress_pdf(in_path, out_path):
     try:
         initial = os.path.getsize(in_path)
@@ -6,6 +8,17 @@ def compress_pdf(in_path, out_path):
             doc.save(out_path, garbage=4, deflate=True, clean=True)
         final = os.path.getsize(out_path)
         reduction = (initial - final) / initial * 100 if initial > 0 else 0
-        return {"success": True, "message": f"Compressed by {reduction:.1f}%. New size: {final/1024:.1f} KB"}
-    except Exception as e: return {"success": False, "message": f"Error: {e}"}
-if __name__ == "__main__": print(json.dumps(compress_pdf(sys.argv[1], sys.argv[2])))
+        return {
+            "success": True,
+            "message": f"Compressed by {reduction:.1f}%. New size: {final/1024:.1f} KB",
+        }
+    except FileNotFoundError:
+        logging.exception("Input file not found: %s", in_path)
+        return {"success": False, "message": "Input file not found."}
+    except Exception as e:
+        logging.exception("Error compressing PDF")
+        return {"success": False, "message": f"Error: {e}"}
+
+
+if __name__ == "__main__":
+    print(json.dumps(compress_pdf(sys.argv[1], sys.argv[2])))
