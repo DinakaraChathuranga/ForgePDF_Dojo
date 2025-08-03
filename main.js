@@ -69,7 +69,12 @@ function getPythonPath() {
 
     // Fall back to system python if available
     try {
-        const which = execSync('which python3 || which python', { encoding: 'utf-8' }).trim();
+        const command = process.platform === 'win32'
+            ? 'where python'
+            : 'which python3 || which python';
+        const which = execSync(command, { encoding: 'utf-8' })
+            .split(/\r?\n/)[0]
+            .trim();
         if (which) {
             return which;
         }
@@ -135,3 +140,5 @@ ipcMain.handle('app:check-update', async () => {
     const updateUrl = 'https://your-domain.com/path/to/update.json';
     return await runPythonScript('notify.py', [updateUrl]);
 });
+
+module.exports = { getPythonPath, runPythonScript };
