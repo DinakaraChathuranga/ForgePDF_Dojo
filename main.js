@@ -138,7 +138,9 @@ ipcMain.handle('pdf:watermark', async (event, filePath, options) => {
 
 ipcMain.handle('app:check-update', async () => {
     const updateUrl = 'https://your-domain.com/path/to/update.json';
-    return await runPythonScript('notify.py', [updateUrl]);
+    // Pass the current app version so the Python script can compare properly
+    const currentVersion = app.getVersion();
+    return await runPythonScript('notify.py', [updateUrl, currentVersion]);
 });
 
 module.exports = { getPythonPath, runPythonScript };

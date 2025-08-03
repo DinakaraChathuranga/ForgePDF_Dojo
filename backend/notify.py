@@ -1,11 +1,9 @@
 import sys, json, urllib.request
 from packaging.version import Version, InvalidVersion
 
-CURRENT_VERSION = "1.0.0"
 
-
-def check_for_updates(url):
-    if not url:
+def check_for_updates(url, current_version):
+    if not url or not current_version:
         return {"isNewVersion": False}
     try:
         with urllib.request.urlopen(url) as response:
@@ -18,7 +16,7 @@ def check_for_updates(url):
         return {"isNewVersion": False}
 
     try:
-        if Version(latest) > Version(CURRENT_VERSION):
+        if Version(latest) > Version(current_version):
             return {
                 "isNewVersion": True,
                 "latestVersion": latest,
@@ -33,4 +31,5 @@ def check_for_updates(url):
 
 if __name__ == "__main__":
     url_arg = sys.argv[1] if len(sys.argv) > 1 else ""
-    print(json.dumps(check_for_updates(url_arg)))
+    version_arg = sys.argv[2] if len(sys.argv) > 2 else ""
+    print(json.dumps(check_for_updates(url_arg, version_arg)))
