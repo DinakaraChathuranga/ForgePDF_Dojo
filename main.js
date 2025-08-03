@@ -1,6 +1,8 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const { PythonShell } = require('python-shell');
+const fs = require('fs');
+const { execSync } = require('child_process');
 
 let mainWindow;
 const isDev = process.env.NODE_ENV !== 'production';
@@ -40,8 +42,52 @@ app.on('window-all-closed', () => {
     }
 });
 
+function getPythonPath() {
+    // Attempt to read a configured path
+    try {
+        const cfgPath = path.join(app.getAppPath(), 'config', 'settings.json');
+        if (fs.existsSync(cfgPath)) {
+            const { pythonPath } = JSON.parse(fs.readFileSync(cfgPath, 'utf-8'));
+            if (pythonPath && fs.existsSync(pythonPath)) {
+                return pythonPath;
+            }
+        }
+    } catch (err) {
+        console.warn('Failed to read python path from config:', err);
+    }
+
+    // Check for a bundled interpreter
+    const bundled = path.join(process.resourcesPath, 'python', process.platform === 'win32' ? 'python.exe' : 'bin/python3');
+    if (fs.existsSync(bundled)) {
+        return bundled;
+    }
+
+    // Try environment variable
+    if (process.env.PYTHON_PATH && fs.existsSync(process.env.PYTHON_PATH)) {
+        return process.env.PYTHON_PATH;
+    }
+
+    // Fall back to system python if available
+    try {
+        const which = execSync('which python3 || which python', { encoding: 'utf-8' }).trim();
+        if (which) {
+            return which;
+        }
+    } catch (err) {
+        // ignore
+    }
+
+    return null;
+}
+
 async function runPythonScript(scriptName, args) {
-    const pythonExe = 'python';
+    const pythonExe = getPythonPath();
+    if (!pythonExe) {
+        const message = 'Python interpreter not found. Please install Python or set the pythonPath in config/settings.json.';
+        console.error(message);
+        return { success: false, message };
+    }
+
     const scriptFolder = path.join(app.getAppPath(), 'backend');
     const options = {
         mode: 'json',
