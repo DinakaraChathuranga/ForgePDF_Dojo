@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const menuItems = document.querySelectorAll('.menu-item');
     const pages = document.querySelectorAll('.page');
+    const themeToggle = document.getElementById('theme-toggle');
     menuItems.forEach(item => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
@@ -13,6 +14,15 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     });
+
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            const icon = themeToggle.querySelector('i');
+            icon.classList.toggle('fa-moon');
+            icon.classList.toggle('fa-sun');
+        });
+    }
 
     const Toast = Swal.mixin({ toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true });
     function showLoading(title) { Swal.fire({ title: title, text: 'Please wait...', allowOutsideClick: false, didOpen: () => Swal.showLoading() }); }

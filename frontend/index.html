@@ -6,6 +6,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,10 +14,11 @@
         <aside class="sidebar">
             <div class="logo"><h2>PDF Toolkit</h2></div>
             <nav class="menu">
-                <a href="#" class="menu-item active" data-target="merge">Merge</a>
-                <a href="#" class="menu-item" data-target="compress">Compress</a>
-                <a href="#" class="menu-item" data-target="protect">Protect</a>
-                </nav>
+                <a href="#" class="menu-item active" data-target="merge"><i class="fa-solid fa-layer-group"></i>Merge</a>
+                <a href="#" class="menu-item" data-target="compress"><i class="fa-solid fa-compress"></i>Compress</a>
+                <a href="#" class="menu-item" data-target="protect"><i class="fa-solid fa-lock"></i>Protect</a>
+            </nav>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme"><i class="fa-solid fa-moon"></i></button>
         </aside>
         <main class="content">
             <section id="merge" class="page active">
