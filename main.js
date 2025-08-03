@@ -100,8 +100,17 @@ async function runPythonScript(scriptName, args) {
         scriptPath: scriptFolder,
         args: args,
     };
+    console.log(`Executing ${scriptName} with args:`, args);
     try {
         const results = await PythonShell.run(scriptName, options);
+        console.log(`Raw results from ${scriptName}:`, results);
+
+        if (!Array.isArray(results) || results.length === 0 || results[0] === undefined) {
+            const message = `Invalid response from ${scriptName}. Expected a JSON array with at least one item.`;
+            console.error(message, results);
+            return { success: false, message };
+        }
+
         return results[0];
     } catch (err) {
         console.error(`Error running ${scriptName}:`, err);
