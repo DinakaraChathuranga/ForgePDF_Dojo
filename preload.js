@@ -4,7 +4,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
     mergePDFs: (filePaths) => ipcRenderer.invoke('pdf:merge', filePaths),
     compressPDF: (filePath) => ipcRenderer.invoke('pdf:compress', filePath),
     protectPDF: (filePath, password) => ipcRenderer.invoke('pdf:protect', filePath, password),
-    watermarkPDF: (filePath, options) => ipcRenderer.invoke('pdf:watermark', filePath, options),
     checkForUpdate: () => ipcRenderer.invoke('app:check-update'),
     on: (channel, callback) => {
         const validChannels = ['update-notification'];
