@@ -22,15 +22,13 @@
                 <a href="#" class="menu-item" data-target="merge"><i data-lucide="files"></i><span>Merge</span></a>
                 <a href="#" class="menu-item" data-target="compress"><i data-lucide="minimize-2"></i><span>Compress</span></a>
                 <a href="#" class="menu-item" data-target="protect"><i data-lucide="shield-check"></i><span>Protect</span></a>
-                <a href="#" class="menu-item" data-target="image-to-pdf"><i data-lucide="image"></i><span>Image to PDF</span></a>
-                <a href="#" class="menu-item" data-target="pdf-to-image"><i data-lucide="images"></i><span>PDF to Image</span></a>
             </nav>
             <div class="sidebar-footer">
                 <div class="sidebar-info">
                     <a href="https://github.com/your-repo" target="_blank">About Us</a>
                     <a href="mailto:test@email.com">test@email.com</a>
                 </div>
-                <p>v2.3.0</p>
+                <p>v2.2.0</p>
             </div>
         </aside>
 
@@ -53,7 +51,7 @@
                     </div>
                 </div>
             </section>
-
+            
             <section id="edit" class="page">
                 <div class="edit-workspace">
                     <div class="drop-area drop-area-full-height" id="edit-drop-area">
@@ -99,7 +97,7 @@
                     </div>
                 </div>
             </section>
-
+            
             <section id="merge" class="page">
                 <div class="page-content-wrapper">
                     <div class="page-header">
@@ -167,62 +165,11 @@
                     </div>
                     <div class="form-group">
                         <label for="password-input"><i data-lucide="key-round"></i> Set Password</label>
-                        <div class="password-wrapper">
-                            <input type="password" id="password-input" placeholder="Enter a strong password" disabled>
-                            <button id="toggle-password-btn" class="password-toggle" disabled><i data-lucide="eye"></i></button>
-                        </div>
+                        <input type="password" id="password-input" placeholder="Enter a strong password" disabled>
                     </div>
                     <div class="action-bar">
                         <button id="clear-protect-btn" class="btn btn-secondary">Clear</button>
                         <button id="protect-btn" class="btn btn-primary" disabled><i data-lucide="lock"></i><span>Protect PDF</span></button>
-                    </div>
-                </div>
-            </section>
-            
-            <section id="image-to-pdf" class="page">
-                 <div class="page-content-wrapper">
-                    <div class="page-header">
-                        <h1>Image to PDF</h1>
-                        <p>Convert JPG or PNG images to a single PDF.</p>
-                    </div>
-                    <div class="drop-area" id="image-to-pdf-drop-area">
-                        <div class="drop-area-content">
-                            <i data-lucide="image" class="drop-icon"></i>
-                            <p><b>Drag & drop images here</b>, or click to select.</p>
-                            <span>JPG and PNG formats are supported</span>
-                        </div>
-                        <input type="file" id="image-to-pdf-file-input" multiple accept=".jpg, .jpeg, .png" hidden>
-                    </div>
-                    <div class="file-list-container">
-                        <ul class="file-list" id="image-to-pdf-file-list"></ul>
-                    </div>
-                    <div class="action-bar">
-                        <button id="clear-image-to-pdf-btn" class="btn btn-secondary">Clear</button>
-                        <button id="image-to-pdf-btn" class="btn btn-primary" disabled><i data-lucide="file-plus-2"></i><span>Convert to PDF</span></button>
-                    </div>
-                </div>
-            </section>
-
-            <section id="pdf-to-image" class="page">
-                <div class="page-content-wrapper">
-                    <div class="page-header">
-                        <h1>PDF to Image</h1>
-                        <p>Convert each page of a PDF into a PNG image.</p>
-                    </div>
-                    <div class="drop-area" id="pdf-to-image-drop-area">
-                        <div class="drop-area-content">
-                            <i data-lucide="images" class="drop-icon"></i>
-                            <p><b>Drag & drop a single PDF here</b>, or click to select.</p>
-                            <span>Each page will be saved as a separate image</span>
-                        </div>
-                        <input type="file" id="pdf-to-image-file-input" accept=".pdf" hidden>
-                    </div>
-                    <div class="file-list-container">
-                        <ul class="file-list" id="pdf-to-image-file-list"></ul>
-                    </div>
-                    <div class="action-bar">
-                        <button id="clear-pdf-to-image-btn" class="btn btn-secondary">Clear</button>
-                        <button id="pdf-to-image-btn" class="btn btn-primary" disabled><i data-lucide="file-image"></i><span>Convert to Images</span></button>
                     </div>
                 </div>
             </section>

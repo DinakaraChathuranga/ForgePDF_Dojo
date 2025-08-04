@@ -1,0 +1,80 @@
+<!-- Updated index.html snippet with all requested features -->
+<!-- Only changes and additions shown here, complete file will be merged in the end -->
+
+<!-- Password Field with Toggle -->
+<div class="form-group">
+  <label for="password-input"><i data-lucide="key-round"></i> Set Password</label>
+  <div class="password-wrapper">
+    <input type="password" id="password-input" placeholder="Enter a strong password" disabled>
+    <button id="toggle-password" type="button" class="toggle-password"><i data-lucide="eye"></i></button>
+  </div>
+</div>
+
+<!-- New Section for Image to PDF -->
+<section id="imgtopdf" class="page">
+  <div class="page-content-wrapper">
+    <div class="page-header">
+      <h1>Image to PDF</h1>
+      <p>Convert images (JPG, PNG) to a single PDF document.</p>
+    </div>
+    <div class="drop-area" id="imgtopdf-drop-area">
+      <div class="drop-area-content">
+        <i data-lucide="upload-cloud" class="drop-icon"></i>
+        <p><b>Drag & drop images here</b>, or click to select.</p>
+        <span>You can select multiple files</span>
+      </div>
+      <input type="file" id="imgtopdf-file-input" multiple accept="image/*" hidden>
+    </div>
+    <div class="file-list-container">
+      <ul class="file-list interactive-list" id="imgtopdf-file-list"></ul>
+    </div>
+    <div class="action-bar">
+      <button id="clear-imgtopdf-btn" class="btn btn-secondary">Clear All</button>
+      <button id="imgtopdf-btn" class="btn btn-primary" disabled><i data-lucide="download"></i><span>Convert to PDF</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- New Section for PDF to Image -->
+<section id="pdftoimg" class="page">
+  <div class="page-content-wrapper">
+    <div class="page-header">
+      <h1>PDF to Images</h1>
+      <p>Convert each page of a PDF into high-quality images.</p>
+    </div>
+    <div class="drop-area" id="pdftoimg-drop-area">
+      <div class="drop-area-content">
+        <i data-lucide="upload-cloud" class="drop-icon"></i>
+        <p><b>Drag & drop a PDF file</b>, or click to select.</p>
+        <span>Only one file allowed</span>
+      </div>
+      <input type="file" id="pdftoimg-file-input" accept=".pdf" hidden>
+    </div>
+    <div class="file-list-container">
+      <ul class="file-list" id="pdftoimg-file-list"></ul>
+    </div>
+    <div class="action-bar">
+      <button id="clear-pdftoimg-btn" class="btn btn-secondary">Clear</button>
+      <button id="pdftoimg-btn" class="btn btn-success" disabled><i data-lucide="image"></i><span>Convert to Images</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- Improved Rotate Toolbar in Editor -->
+<div class="editor-mode-controls visible" id="editor-mode-controls">
+  <label for="rotate-angle-select">Angle:</label>
+  <select id="rotate-angle-select" class="btn-sm">
+    <option value="90">90° Clockwise</option>
+    <option value="180">180°</option>
+    <option value="270">270° Clockwise</option>
+  </select>
+  <button id="apply-rotation-btn" class="btn btn-sm btn-primary">Apply to Selected</button>
+</div>
+
+<!-- Script for Greeting Fix -->
+<script>
+  const greeting = document.getElementById('greeting');
+  const hour = new Date().getHours();
+  const message = hour < 12 ? 'Good morning! 👋' : hour < 18 ? 'Good afternoon! 👋' : 'Good evening! 👋';
+  greeting.textContent = message;
+</script>
