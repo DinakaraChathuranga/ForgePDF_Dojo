@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- UPDATED File Handling Logic ---
+    // --- Standard Tools Setup (Merge, Compress, Protect) ---
     function setupFileHandling(pageId, { isMultiple = false, isInteractive = false } = {}) {
         const dropArea = document.getElementById(`${pageId}-drop-area`);
         const fileInput = document.getElementById(`${pageId}-file-input`);
@@ -38,8 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const actionBtn = document.getElementById(`${pageId}-btn`);
         const clearBtn = document.getElementById(`clear-${pageId}-btn`);
         const extraInputs = document.querySelectorAll(`#${pageId} .form-group input, #${pageId} .form-group select`);
-
-        let files = []; // Use an array of objects: { id, path }
+        
+        let files = [];
 
         const reset = () => {
             files = [];
@@ -53,85 +53,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 files.forEach(file => {
                     const li = document.createElement('li');
                     li.dataset.id = file.id;
-
                     if (isInteractive) {
-                        li.setAttribute('draggable', true);
-                        li.innerHTML = `
-                            <div class="file-list-item-content">
-                                <i data-lucide="grip-vertical" class="drag-handle"></i>
-                                <span>${file.path.split(/[/\\]/).pop()}</span>
-                            </div>
-                            <button class="remove-file-btn" data-id="${file.id}"><i data-lucide="x"></i></button>
-                        `;
+                         li.innerHTML = `<span>${file.path.split(/[/\\]/).pop()}</span>`;
                     } else {
                         li.textContent = file.path.split(/[/\\]/).pop();
                     }
                     fileListElem.appendChild(li);
                 });
-                if (isInteractive) {
-                    lucide.createIcons();
-                }
             }
-
+            
             const isReady = isMultiple ? files.length > 1 : files.length > 0;
             if (actionBtn) actionBtn.disabled = !isReady;
             extraInputs.forEach(input => input.disabled = !isReady);
         };
 
         const handleFiles = (newFiles) => {
-            const pdfs = Array.from(newFiles).filter(f => f.type === 'application/pdf');
             if (isMultiple) {
-                pdfs.forEach(file => files.push({ path: file.path, id: Date.now() + Math.random() }));
+                newFiles.forEach(file => files.push({ path: file.path, id: Date.now() + Math.random() }));
             } else {
-                files = pdfs.length > 0 ? [{ path: pdfs[0].path, id: Date.now() }] : [];
+                files = newFiles.length > 0 ? [{ path: newFiles[0].path, id: Date.now() }] : [];
             }
             updateUI();
         };
-
-        if (isInteractive) {
-            // Event delegation for remove buttons
-            fileListElem.addEventListener('click', (e) => {
-                const removeBtn = e.target.closest('.remove-file-btn');
-                if (removeBtn) {
-                    const idToRemove = parseFloat(removeBtn.dataset.id);
-                    files = files.filter(f => f.id !== idToRemove);
-                    updateUI();
-                }
-            });
-
-            // Drag and Drop Logic for reordering
-            let dragSrcEl = null;
-            fileListElem.addEventListener('dragstart', (e) => {
-                dragSrcEl = e.target;
-                e.dataTransfer.effectAllowed = 'move';
-                e.target.classList.add('dragging');
-            });
-            fileListElem.addEventListener('dragend', (e) => {
-                e.target.classList.remove('dragging');
-            });
-            fileListElem.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                const target = e.target.closest('li');
-                if (target && target !== dragSrcEl) {
-                    const rect = target.getBoundingClientRect();
-                    const next = (e.clientY - rect.top) / (rect.bottom - rect.top) > .5;
-                    fileListElem.insertBefore(dragSrcEl, next && target.nextSibling || target);
-                }
-            });
-            fileListElem.addEventListener('drop', (e) => {
-                e.preventDefault();
-                // Get the new order from the DOM and update the files array
-                const newOrderIds = [...fileListElem.querySelectorAll('li')].map(li => parseFloat(li.dataset.id));
-                files.sort((a, b) => newOrderIds.indexOf(a.id) - newOrderIds.indexOf(b.id));
-                updateUI(); // Re-render to clean up styles, though optional here
-            });
-        }
-
+        
         if (dropArea) dropArea.addEventListener('click', () => fileInput.click());
         dropArea.addEventListener('dragover', (e) => { e.preventDefault(); e.stopPropagation(); });
-        dropArea.addEventListener('drop', (e) => { e.preventDefault(); e.stopPropagation(); handleFiles(e.dataTransfer.files); });
-        fileInput.addEventListener('change', () => handleFiles(fileInput.files));
-        if (clearBtn) clearBtn.addEventListener('click', reset);
+        dropArea.addEventListener('drop', (e) => { e.preventDefault(); e.stopPropagation(); handleFiles(Array.from(e.dataTransfer.files).filter(f => f.type === 'application/pdf')); });
+        fileInput.addEventListener('change', () => handleFiles(Array.from(fileInput.files)));
+        if(clearBtn) clearBtn.addEventListener('click', reset);
 
         return { getFiles: () => files.map(f => f.path), reset };
     }
@@ -144,14 +93,14 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('compress-btn').addEventListener('click', async () => { showLoading('Compressing PDF...'); const res = await window.electronAPI.compressPDF(compressHandler.getFiles()[0]); if (handleResponse(res)) compressHandler.reset(); });
     document.getElementById('protect-btn').addEventListener('click', async () => { const pw = document.getElementById('password-input').value; if (!pw) { Swal.fire({ icon: 'warning', title: 'Password Required' }); return; } showLoading('Protecting PDF...'); const res = await window.electronAPI.protectPDF(protectHandler.getFiles()[0], pw); if (handleResponse(res)) { protectHandler.reset(); document.getElementById('password-input').value = ''; } });
 
-    // --- UNIFIED EDIT WORKSPACE (No changes here, remains the same) ---
-    // (Your existing code for the Edit & Organize workspace goes here)
+    // --- UNIFIED EDIT WORKSPACE ---
     const editState = {
         currentFile: null,
         mode: 'organize',
-        pages: [],
+        pages: [], // { element, originalIndex, isDeleted, rotation }
         pageToMove: null,
     };
+
     const editDropArea = document.getElementById('edit-drop-area');
     const editFileInput = document.getElementById('edit-file-input');
     const editorContainer = document.getElementById('editor-container');
@@ -162,6 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const editToolbar = document.getElementById('editor-toolbar');
     const editSaveBtn = document.getElementById('edit-save-btn');
     const editClearBtn = document.getElementById('edit-clear-btn');
+
     function resetEditWorkspace() {
         editState.currentFile = null;
         editState.pages = [];
@@ -171,11 +121,13 @@ document.addEventListener('DOMContentLoaded', () => {
         editDropArea.style.display = 'flex';
         editSaveBtn.disabled = true;
     }
+
     editDropArea.addEventListener('click', () => editFileInput.click());
     editFileInput.addEventListener('change', (e) => handleEditFile(e.target.files));
     editDropArea.addEventListener('dragover', (e) => e.preventDefault());
     editDropArea.addEventListener('drop', (e) => { e.preventDefault(); handleEditFile(e.dataTransfer.files); });
     editClearBtn.addEventListener('click', resetEditWorkspace);
+
     async function handleEditFile(files) {
         if (!files || files.length === 0) return;
         const file = files[0];
@@ -183,15 +135,19 @@ document.addEventListener('DOMContentLoaded', () => {
             handleResponse({ success: false, message: "Please select a PDF file." });
             return;
         }
+
         resetEditWorkspace();
         editState.currentFile = file.path;
         editFilename.textContent = file.name;
+
         editDropArea.style.display = 'none';
         editorContainer.style.display = 'flex';
         editorContent.innerHTML = '';
         editorContent.classList.add('loading');
+
         const result = await window.electronAPI.getPdfPreview(editState.currentFile, -1);
         editorContent.classList.remove('loading');
+
         if (result.success) {
             result.filePaths.forEach((path, i) => {
                 const thumb = createPageThumbnail(path, i + 1);
@@ -204,6 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
             resetEditWorkspace();
         }
     }
+
     function createPageThumbnail(imagePath, pageNum) {
         const thumb = document.createElement('div');
         thumb.className = 'page-thumbnail';
@@ -216,21 +173,26 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => lucid.createIcons({ nodes: [thumb.querySelector('.delete-btn')] }), 0);
         return thumb;
     }
+
     editToolbar.addEventListener('click', (e) => {
         const toolBtn = e.target.closest('.tool-btn');
         if (toolBtn) setEditMode(toolBtn.dataset.mode);
     });
+
     function setEditMode(newMode) {
         editState.mode = newMode;
         editorContainer.dataset.mode = newMode;
         editToolbar.querySelectorAll('.tool-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.mode === newMode));
+        
         editState.pages.forEach(p => p.element.classList.remove('selected', 'selected-for-move', 'marked-for-deletion'));
         editState.pageToMove = null;
+
         editModeControls.innerHTML = '';
         editModeControls.classList.remove('visible');
         const deleteBtns = editorContent.querySelectorAll('.delete-btn');
         editSaveBtn.textContent = 'Save Changes';
         editSaveBtn.disabled = false;
+
         if (newMode === 'organize') {
             editModeInfo.textContent = "Drag & drop, or click a page then its new position to reorder. Use 'X' to delete.";
             deleteBtns.forEach(btn => btn.style.display = 'flex');
@@ -255,6 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
             editSaveBtn.textContent = 'Save Rotated PDF';
         }
     }
+
     function applyRotationPreview() {
         const angle = parseInt(document.getElementById('rotate-angle-select').value, 10);
         editState.pages.forEach(p => {
@@ -264,11 +227,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
     editorContent.addEventListener('click', (e) => {
         const thumb = e.target.closest('.page-thumbnail');
         if (!thumb) return;
         const pageNum = parseInt(thumb.dataset.page, 10);
         const pageState = editState.pages.find(p => p.originalIndex === pageNum);
+
         if (editState.mode === 'organize') {
             if (e.target.closest('.delete-btn')) {
                 pageState.isDeleted = !pageState.isDeleted;
@@ -283,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 editState.pageToMove.classList.remove('selected-for-move');
                 editState.pageToMove = null;
-                setEditMode('organize');
+                setEditMode('organize'); // Reset info text
             }
         } else if (editState.mode === 'split' || editState.mode === 'rotate') {
             thumb.classList.toggle('selected');
@@ -294,6 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+
     let draggedItem = null;
     editorContent.addEventListener('dragstart', (e) => {
         if (editState.mode !== 'organize') return;
@@ -311,9 +277,11 @@ document.addEventListener('DOMContentLoaded', () => {
             editorContent.insertBefore(draggedItem, next && target.nextSibling || target);
         }
     });
+
     editSaveBtn.addEventListener('click', async () => {
         let result;
         showLoading('Processing PDF...');
+        
         if (editState.mode === 'organize') {
             const pageOrder = [...editorContent.querySelectorAll('.page-thumbnail')].map(t => t.dataset.page);
             const pagesToDelete = editState.pages.filter(p => p.isDeleted).map(p => p.originalIndex);
@@ -336,11 +304,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             result = await window.electronAPI.rotatePDF(editState.currentFile, JSON.stringify(rotations));
         }
+
         if (result && handleResponse(result)) {
             resetEditWorkspace();
         } else if (!result) {
             Swal.close();
         }
     });
-
 });
