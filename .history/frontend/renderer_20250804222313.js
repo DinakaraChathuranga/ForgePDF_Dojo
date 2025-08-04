@@ -3,14 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const menuItems = document.querySelectorAll('.menu-item');
     const pages = document.querySelectorAll('.page');
     const toolCards = document.querySelectorAll('.tool-card');
-    const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 4000,
-        timerProgressBar: true,
-        showCloseButton: true, // Allow closing success toasts
-    });
+    const Toast = Swal.mixin({ toast: true, position: 'top-end', showConfirmButton: false, timer: 3500, timerProgressBar: true });
 
     // --- Core Functions ---
 
@@ -33,26 +26,17 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * Handles the response from the main process, showing success or error popups.
      * @param {object} result - The result object from the backend {success: boolean, message: string}.
-     * @param {object} handlerToReset - The file handler object to call .reset() on.
+     * @returns {boolean} - True if the operation was successful, false otherwise.
      */
-    function handleResponse(result, handlerToReset) {
-        Swal.close(); // Close the loading popup first
+    function handleResponse(result) {
+        Swal.close();
         if (result && result.success) {
             Toast.fire({ icon: 'success', title: 'Success!', text: result.message });
-            if (handlerToReset) handlerToReset.reset();
+            return true;
         } else {
             const message = result ? result.message : 'An unknown error occurred.';
-            Swal.fire({
-                icon: 'error',
-                title: 'An Error Occurred',
-                text: message,
-                showCloseButton: true, // Allow closing error popups
-                confirmButtonText: 'OK',
-                confirmButtonColor: 'var(--primary)',
-            }).then(() => {
-                // When the error alert is closed (by button or 'X'), reset the state.
-                if (handlerToReset) handlerToReset.reset();
-            });
+            Swal.fire({ icon: 'error', title: 'An Error Occurred', text: message, confirmButtonColor: 'var(--primary)' });
+            return false;
         }
     }
 
@@ -122,7 +106,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const fileListElem = document.getElementById(`${pageId}-file-list`);
         const actionBtn = document.getElementById(`${pageId}-btn`);
         const clearBtn = document.getElementById(`clear-${pageId}-btn`);
-        const extraInputs = document.querySelectorAll(`#${pageId} .form-group input, #${pageId} .form-group select`);
         
         let files = []; // Array of {path: string, id: number}
 
@@ -149,18 +132,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 if (isInteractive) lucide.createIcons();
             }
-            
-            const hasFiles = files.length > 0;
-            const isReadyForAction = isMultiple ? files.length > 1 : hasFiles;
-
-            if (actionBtn) actionBtn.disabled = !isReadyForAction;
-
-            // **FIX**: This now correctly enables/disables the password field
-            extraInputs.forEach(input => input.disabled = !hasFiles);
-
-            if (pageId === 'protect') {
-                const toggleBtn = document.getElementById('toggle-password-btn');
-                if (toggleBtn) toggleBtn.disabled = !hasFiles;
+            // Enable/disable the main action button
+            if (actionBtn) {
+                 actionBtn.disabled = files.length === 0 || (isMultiple && files.length < 2);
             }
         };
 
@@ -173,6 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             filteredFiles.forEach(file => {
+                 // Prevent duplicates
                 if (!files.some(f => f.path === file.path)) {
                     files.push({ path: file.path, id: Date.now() + Math.random() });
                 }
@@ -187,6 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (fileInput) fileInput.addEventListener('change', () => handleFiles(fileInput.files));
         if (clearBtn) clearBtn.addEventListener('click', reset);
         
+        // Drag-and-drop for interactive lists
         if (isInteractive && fileListElem) {
              fileListElem.addEventListener('click', (e) => {
                 const removeBtn = e.target.closest('.remove-file-btn');
@@ -197,8 +173,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
             let dragSrcEl = null;
-            fileListElem.addEventListener('dragstart', (e) => { dragSrcEl = e.target; e.dataTransfer.effectAllowed = 'move'; e.target.classList.add('dragging'); });
-            fileListElem.addEventListener('dragend', (e) => { e.target.classList.remove('dragging'); });
+            fileListElem.addEventListener('dragstart', (e) => {
+                dragSrcEl = e.target;
+                e.dataTransfer.effectAllowed = 'move';
+                e.target.classList.add('dragging');
+            });
+            fileListElem.addEventListener('dragend', (e) => {
+                e.target.classList.remove('dragging');
+            });
             fileListElem.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 const target = e.target.closest('li');
@@ -221,14 +203,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Setup All Application Handlers ---
 
+    // Initialize all tool pages
     const mergeHandler = setupFileHandling('merge', { isMultiple: true, isInteractive: true });
     const compressHandler = setupFileHandling('compress');
     const protectHandler = setupFileHandling('protect');
+    const imageToPdfHandler = setupFileHandling('image-to-pdf', { isMultiple: true, acceptedFiles: '.jpg, .jpeg, .png' });
+    const pdfToImageHandler = setupFileHandling('pdf-to-image');
 
+    // Setup button click listeners
     const actionButtons = [
         { id: 'merge-btn', handler: mergeHandler, api: 'mergePDFs', loadingMsg: 'Merging PDFs...' },
         { id: 'compress-btn', handler: compressHandler, api: 'compressPDF', loadingMsg: 'Compressing PDF...' },
-        { id: 'protect-btn', handler: protectHandler, api: 'protectPDF', loadingMsg: 'Protecting PDF...' }
+        { id: 'protect-btn', handler: protectHandler, api: 'protectPDF', loadingMsg: 'Protecting PDF...' },
+        { id: 'image-to-pdf-btn', handler: imageToPdfHandler, api: 'imageToPdf', loadingMsg: 'Converting to PDF...' },
+        { id: 'pdf-to-image-btn', handler: pdfToImageHandler, api: 'pdfToImage', loadingMsg: 'Converting to Images...' }
     ];
 
     actionButtons.forEach(({ id, handler, api, loadingMsg }) => {
@@ -239,12 +227,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     const files = handler.getFiles();
                     if (files.length === 0) return;
                     
-                    let args = (api === 'mergePDFs') ? [files] : [files[0]];
+                    let args = (api === 'mergePDFs' || api === 'imageToPdf') ? [files] : [files[0]];
 
+                    // Special case for protect
                     if (api === 'protectPDF') {
                         const password = document.getElementById('password-input').value;
                         if (!password) {
-                            return Swal.fire({ icon: 'warning', title: 'Password Required', text: 'Please enter a password to protect the PDF.' });
+                            Swal.fire({ icon: 'warning', title: 'Password Required', text: 'Please enter a password to protect the PDF.' });
+                            return;
                         }
                         args.push(password);
                     }
@@ -252,14 +242,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     showLoading(loadingMsg);
                     const result = await window.electronAPI[api](...args);
                     
-                    handleResponse(result, handler);
-
-                    if (result && result.success && api === 'protectPDF') {
-                        document.getElementById('password-input').value = '';
+                    if (handleResponse(result)) {
+                        handler.reset();
+                        // Also reset password field if protect was successful
+                        if (api === 'protectPDF') {
+                            document.getElementById('password-input').value = '';
+                        }
                     }
-
                 } catch (e) {
-                    handleResponse({ success: false, message: e.message }, handler);
+                    handleResponse({ success: false, message: e.message });
                 }
             });
         }
@@ -267,7 +258,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Edit & Organize Workspace Logic ---
     const editWorkspace = {
-        state: { currentFile: null, mode: 'organize', pages: [], pageToMove: null, draggedItem: null },
+        state: {
+            currentFile: null,
+            mode: 'organize',
+            pages: [],
+            pageToMove: null,
+        },
         elements: {
             dropArea: document.getElementById('edit-drop-area'),
             fileInput: document.getElementById('edit-file-input'),
@@ -298,7 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
             saveBtn.addEventListener('click', () => this.save());
         },
         reset() {
-            this.state = { currentFile: null, mode: 'organize', pages: [], pageToMove: null, draggedItem: null };
+            this.state = { currentFile: null, mode: 'organize', pages: [], pageToMove: null };
             this.elements.content.innerHTML = '';
             this.elements.container.style.display = 'none';
             this.elements.dropArea.style.display = 'flex';
@@ -308,32 +304,28 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!files || files.length === 0) return;
             const file = files[0];
             if (file.type !== 'application/pdf') {
-                return handleResponse({ success: false, message: "Please select a PDF file." });
+                handleResponse({ success: false, message: "Please select a PDF file." });
+                return;
             }
             this.reset();
             this.state.currentFile = file.path;
             this.elements.filename.textContent = file.name;
             this.elements.dropArea.style.display = 'none';
             this.elements.container.style.display = 'flex';
+            this.elements.content.innerHTML = '';
             this.elements.content.classList.add('loading');
-            try {
-                const result = await window.electronAPI.getPdfPreview(this.state.currentFile, -1);
-                if (result.success) {
-                    result.filePaths.forEach((path, i) => {
-                        const thumb = this.createPageThumbnail(path, i + 1);
-                        this.elements.content.appendChild(thumb);
-                        this.state.pages.push({ element: thumb, originalIndex: i + 1, isDeleted: false, rotation: 0 });
-                    });
-                    this.setMode('organize');
-                } else {
-                    handleResponse(result);
-                    this.reset();
-                }
-            } catch(e) {
-                 handleResponse({ success: false, message: e.message });
-                 this.reset();
-            } finally {
-                this.elements.content.classList.remove('loading');
+            const result = await window.electronAPI.getPdfPreview(this.state.currentFile, -1);
+            this.elements.content.classList.remove('loading');
+            if (result.success) {
+                result.filePaths.forEach((path, i) => {
+                    const thumb = this.createPageThumbnail(path, i + 1);
+                    this.elements.content.appendChild(thumb);
+                    this.state.pages.push({ element: thumb, originalIndex: i + 1, isDeleted: false, rotation: 0 });
+                });
+                this.setMode('organize');
+            } else {
+                handleResponse(result);
+                this.reset();
             }
         },
         createPageThumbnail(imagePath, pageNum) {
@@ -412,7 +404,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     this.state.pageToMove.classList.remove('selected-for-move');
                     this.state.pageToMove = null;
-                    this.setMode('organize');
+                    this.setMode('organize'); // Reset mode info text
                 }
             } else if (this.state.mode === 'split' || this.state.mode === 'rotate') {
                 thumb.classList.toggle('selected');
@@ -424,22 +416,22 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         },
         onPageDragStart(e) {
-            if (this.state.mode !== 'organize' || !e.target.closest('.page-thumbnail')) return;
-            this.state.draggedItem = e.target.closest('.page-thumbnail');
-            setTimeout(() => { if (this.state.draggedItem) this.state.draggedItem.classList.add('ghost'); }, 0);
+            if (this.state.mode !== 'organize' || !e.target.classList.contains('page-thumbnail')) return;
+            this.draggedItem = e.target;
+            setTimeout(() => { if (this.draggedItem) this.draggedItem.classList.add('ghost'); }, 0);
         },
         onPageDragEnd() {
-            if (this.state.draggedItem) this.state.draggedItem.classList.remove('ghost');
-            this.state.draggedItem = null;
+            if (this.draggedItem) this.draggedItem.classList.remove('ghost');
+            this.draggedItem = null;
         },
         onPageDragOver(e) {
             e.preventDefault();
-            if (this.state.mode !== 'organize' || !this.state.draggedItem) return;
+            if (this.state.mode !== 'organize' || !this.draggedItem) return;
             const target = e.target.closest('.page-thumbnail');
-            if (target && target !== this.state.draggedItem) {
+            if (target && target !== this.draggedItem) {
                 const rect = target.getBoundingClientRect();
                 const next = (e.clientX - rect.left) / rect.width > 0.5;
-                this.elements.content.insertBefore(this.state.draggedItem, next && target.nextSibling || target);
+                this.elements.content.insertBefore(this.draggedItem, next && target.nextSibling || target);
             }
         },
         async save() {
@@ -464,11 +456,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     result = await window.electronAPI.rotatePDF(this.state.currentFile, JSON.stringify(rotations));
                 }
                 
-                if (result && result.success) {
-                    handleResponse(result);
+                if (handleResponse(result)) {
                     this.reset();
-                } else {
-                    handleResponse(result); // Let handleResponse manage reset on failure
                 }
             } catch (e) {
                 handleResponse({ success: false, message: e.message });

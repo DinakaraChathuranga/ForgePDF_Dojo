@@ -14,7 +14,7 @@ def pdf_to_image(file_path, output_dir):
         doc = fitz.open(file_path)
         saved = 0
         for i, page in enumerate(doc):
-            pix = page.get_pixmap(dpi=150) # Using 150 dpi for a good balance of quality and size
+            pix = page.get_pixmap(dpi=150)
             image_path = os.path.join(output_dir, f"page_{i + 1}.png")
             pix.save(image_path)
             saved += 1

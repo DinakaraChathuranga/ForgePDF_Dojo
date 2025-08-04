@@ -30,7 +30,7 @@ def image_to_pdf(image_paths_str, output_path):
 
         doc.save(output_path)
         doc.close()
-        return {"success": True, "message": f"Successfully converted {len(doc)} images to a PDF."}
+        return {"success": True, "message": f"Successfully converted {len(image_paths)} images to a PDF."}
     except Exception as e:
         return {"success": False, "message": f"An unexpected error occurred: {str(e)}"}
 
