@@ -344,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <img src="${imagePath.replace(/\\/g, '/')}?t=${Date.now()}" alt="Page ${pageNum}" draggable="false">
                 <span class="page-number">${pageNum}</span>
                 <button class="delete-btn" style="display: none;"><i data-lucide="x"></i></button>`;
-            setTimeout(() => lucide.createIcons({ nodes: [thumb.querySelector('.delete-btn')] }), 0);
+            setTimeout(() => lucid.createIcons({ nodes: [thumb.querySelector('.delete-btn')] }), 0);
             return thumb;
         },
         setMode(newMode) {
