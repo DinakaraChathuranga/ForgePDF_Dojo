@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ForgePDF Dojo</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-icon-wrapper">
+                    <img src="assets/logo.png" class="logo-image" alt="Logo">
+                </div>
+                <div class="logo-text">
+                    <span class="logo-main-title">ForgePDF Dojo</span>
+                    <span class="logo-subtitle">PDF Toolkit</span>
+                </div>
+            </div>
+            <nav class="menu">
+                <a href="#" class="menu-item active" data-page="home"><i class="fas fa-home"></i> Home</a>
+                <a href="#" class="menu-item" data-page="merge"><i class="fas fa-object-union"></i> Merge PDF</a>
+                <a href="#" class="menu-item" data-page="split"><i class="fas fa-object-group"></i> Split PDF</a>
+                <a href="#" class="menu-item" data-page="compress"><i class="fas fa-compress-arrows-alt"></i> Compress PDF</a>
+                <a href="#" class="menu-item" data-page="protect"><i class="fas fa-lock"></i> Protect PDF</a>
+                <a href="#" class="menu-item" data-page="watermark"><i class="fas fa-copyright"></i> Watermark</a>
+                <a href="#" class="menu-item" data-page="rotate"><i class="fas fa-sync-alt"></i> Rotate PDF</a>
+                <a href="#" class="menu-item" data-page="edit-organize"><i class="fas fa-edit"></i> Edit & Organize</a>
+                <a href="#" class="menu-item" data-page="pdf-to-image"><i class="fas fa-file-image"></i> PDF to Image</a>
+                <a href="#" class="menu-item" data-page="image-to-pdf"><i class="fas fa-image"></i> Image to PDF</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-info">
+                    <span>Version 1.0.0</span>
+                    <a href="#" id="check-for-updates">Check for Updates</a>
+                </div>
+            </div>
+        </div>
+        <main class="content">
+            <div id="home" class="page active">
+                <div class="page-content-wrapper-full">
+                    <div class="hero-section">
+                        <div id="lottie-animation" style="width: 250px; height: 250px; margin: 0 auto 24px;"></div>
+                        <h1 class="hero-title">ForgePDF Dojo</h1>
+                        <p class="hero-subtitle">Your All-in-One Offline PDF Toolkit</p>
+                    </div>
+                    <div class="tools-list">
+                        <!-- Tool cards will be dynamically inserted here by renderer.js -->
+                    </div>
+                </div>
+            </div>
+            <!-- Other pages -->
+            <div id="merge" class="page">
+                <div class="page-content-wrapper">
+                    <div class="page-header">
+                        <h1>Merge PDF Files</h1>
+                        <p>Combine multiple PDFs into a single document.</p>
+                    </div>
+                    <div class="drop-area" id="merge-drop-area">
+                        <div class="drop-area-content">
+                            <i class="fas fa-file-upload drop-icon"></i>
+                            <p>Drop PDF files here</p>
+                            <span>or click to select files</span>
+                        </div>
+                    </div>
+                    <div class="file-list-container">
+                        <ul id="merge-file-list" class="file-list interactive-list"></ul>
+                    </div>
+                    <div class="action-bar">
+                        <button id="merge-btn" class="btn btn-primary" disabled>
+                            <i class="fas fa-object-union"></i> Merge PDFs
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="split" class="page">
+                <!-- Split Page Content -->
+            </div>
+            <div id="compress" class="page">
+                <!-- Compress Page Content -->
+            </div>
+            <div id="protect" class="page">
+                <!-- Protect Page Content -->
+            </div>
+            <div id="watermark" class="page">
+                <!-- Watermark Page Content -->
+            </div>
+            <div id="rotate" class="page">
+                <!-- Rotate Page Content -->
+            </div>
+            <div id="edit-organize" class="page">
+                <!-- Edit & Organize Page Content -->
+            </div>
+            <div id="pdf-to-image" class="page">
+                <!-- PDF to Image Page Content -->
+            </div>
+            <div id="image-to-pdf" class="page">
+                <!-- Image to PDF Page Content -->
+            </div>
+        </main>
+    </div>
+    <script src="renderer.js"></script>
+</body>
+</html>
