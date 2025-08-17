@@ -8,20 +8,22 @@ const os = require('os');
  * Gets the correct path to the Python executable.
  */
 function getPythonPath() {
-    // In a packaged app, we will rely on the system's Python installation.
-    return process.platform === 'win32' ? 'python' : 'python3';
+    if (process.platform === 'win32') {
+        return 'python';
+    }
+    return 'python3';
 }
 
 /**
  * Gets the correct path to a backend Python script.
  */
 function getScriptPath(scriptName) {
-    // If in development, use the local backend folder
-    if (!app.isPackaged) {
+    const isDev = process.env.NODE_ENV !== 'production' || !app.isPackaged;
+    if (isDev) {
         return path.join(__dirname, 'backend', scriptName);
     }
-    // In a packaged app, look for the script in the 'extraResources' location
-    return path.join(process.resourcesPath, 'backend', scriptName);
+    // In a packaged app, scripts are in the 'app.asar.unpacked' directory
+    return path.join(process.resourcesPath, 'app.asar.unpacked', 'backend', scriptName);
 }
 
 /**

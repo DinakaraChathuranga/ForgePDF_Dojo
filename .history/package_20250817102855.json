@@ -32,11 +32,8 @@
       "!dist/",
       "!config/"
     ],
-    "extraResources": [
-      {
-        "from": "backend",
-        "to": "backend"
-      }
+    "asarUnpack": [
+      "./backend/**"
     ],
     "win": {
       "target": "portable",
