@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ForgePDF Dojo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar (kept as is) -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon-wrapper"><img src="./assets/logo.png" alt="PDF Dojo Logo" class="logo-image"></div>
+                <div class="logo-text"><span class="logo-main-title">PDF Dojo</span><span class="logo-subtitle">by Forge</span></div>
+            </div>
+            <nav class="menu">
+                <a href="#" class="menu-item active" data-target="home"><i data-lucide="home"></i><span>Home</span></a>
+                <a href="#" class="menu-item" data-target="edit"><i data-lucide="edit"></i><span>Edit & Organize</span></a>
+                <a href="#" class="menu-item" data-target="merge"><i data-lucide="files"></i><span>Merge</span></a>
+                <a href="#" class="menu-item" data-target="compress"><i data-lucide="minimize-2"></i><span>Compress</span></a>
+                <a href="#" class="menu-item" data-target="protect"><i data-lucide="shield-check"></i><span>Protect</span></a>
+                <a href="#" class="menu-item" data-target="images"><i data-lucide="image"></i><span>Images to PDF</span></a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-info">
+                    <a href="https://www.linkedin.com/company/forge-antropi/" target="_blank">About Us</a>
+                    <a href="mailto:pdfdojo@forgeantropi.com">pdfdojo@forgeantropi.com</a>
+                </div>
+                <p id="app-version">v2.3.0</p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area with Ribbon -->
+        <main class="main-content">
+            <!-- Ribbon Header -->
+            <div class="ribbon-header">
+                <div class="ribbon-tabs">
+                    <button class="ribbon-tab active" data-tab="home">
+                        <i data-lucide="home"></i>
+                        <span>Home</span>
+                    </button>
+                    <button class="ribbon-tab" data-tab="file">
+                        <i data-lucide="file-text"></i>
+                        <span>File</span>
+                    </button>
+                    <button class="ribbon-tab" data-tab="edit">
+                        <i data-lucide="edit-3"></i>
+                        <span>Edit</span>
+                    </button>
+                    <button class="ribbon-tab" data-tab="organize">
+                        <i data-lucide="move"></i>
+                        <span>Organize</span>
+                    </button>
+                    <button class="ribbon-tab" data-tab="tools">
+                        <i data-lucide="settings"></i>
+                        <span>Tools</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Ribbon Content -->
+            <div class="ribbon-content">
+                <!-- Home Tab -->
+                <div class="ribbon-panel active" data-panel="home">
+                    <div class="ribbon-group">
+                        <h3>Quick Actions</h3>
+                        <div class="ribbon-buttons">
+                            <button class="ribbon-btn" data-action="open-pdf">
+                                <i data-lucide="folder-open"></i>
+                                <span>Open PDF</span>
+                            </button>
+                            <button class="ribbon-btn" data-action="new-pdf">
+                                <i data-lucide="file-plus"></i>
+                                <span>New PDF</span>
+                            </button>
+                            <button class="ribbon-btn" data-action="save-pdf">
+                                <i data-lucide="save"></i>
+                                <span>Save</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="ribbon-group">
+                        <h3>Convert</h3>
+                        <div class="ribbon-buttons">
+                            <button class="ribbon-btn" data-action="images-to-pdf">
+                                <i data-lucide="image"></i>
+                                <span>Images to PDF</span>
+                            </button>
+                            <button class="ribbon-btn" data-action="pdf-to-images">
+                                <i data-lucide="image-plus"></i>
+                                <span>PDF to Images</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- File Tab -->
+                <div class="ribbon-panel" data-panel="file">
+                    <div class="ribbon-group">
+                        <h3>File Operations</h3>
+                        <div class="ribbon-buttons">
+                            <button class="ribbon-btn" data-action="merge-pdfs">
+                                <i data-lucide="files"></i>
+                                <span>Merge PDFs</span>
+                            </button>
+                            <button class="ribbon-btn" data-action="split-pdf">
+                                <i data-lucide="scissors"></i>
+                                <span>Split PDF</span>
+                            </button>
+                            <button class="ribbon-btn" data-action="compress-pdf">
+                                <i data-lucide="minimize-2"></i>
+                                <span>Compress</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="ribbon-group">
+                        <h3>Security</h3>
+                        <div class="ribbon-buttons">
+                            <button class="ribbon-btn" data-action="protect-pdf">
+                                <i data-lucide="shield"></i>
+                                <span>Protect</span>
+                            </button>
+                            <button class="ribbon-btn" data-action="remove-password">
+                                <i data-lucide="unlock"></i>
+                                <span>Remove Password</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Edit Tab -->
+                <div class="ribbon-panel" data-panel="edit">
+                    <div class="ribbon-group">
+                        <h3>Text Editing</h3>
+                        <div class="ribbon-buttons">
+                            <button class="ribbon-btn" data-action="extract-text">
+                                <i data-lucide="type"></i>
+                                <span>Extract Text</span>
+                            </button>
+                            <button class="ribbon-btn" data-action="edit-text">
+                                <i data-lucide="edit-2"></i>
+                                <span>Edit Text</span>
+                            </button>
+                            <button class="ribbon-btn" data-action="add-text">
+                                <i data-lucide="plus"></i>
+                                <span>Add Text</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="ribbon-group">
+                        <h3>Images</h3>
+                        <div class="ribbon-buttons">
+                            <button class="ribbon-btn" data-action="add-image">
+                                <i data-lucide="image-plus"></i>
+                                <span>Add Image</span>
+                            </button>
+                            <button class="ribbon-btn" data-action="extract-images">
+                                <i data-lucide="download"></i>
+                                <span>Extract Images</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Organize Tab -->
+                <div class="ribbon-panel" data-panel="organize">
+                    <div class="ribbon-group">
+                        <h3>Pages</h3>
+                        <div class="ribbon-buttons">
+                            <button class="ribbon-btn" data-action="rotate-pages">
+                                <i data-lucide="rotate-cw"></i>
+                                <span>Rotate</span>
+                            </button>
+                            <button class="ribbon-btn" data-action="delete-pages">
+                                <i data-lucide="trash-2"></i>
+                                <span>Delete</span>
+                            </button>
+                            <button class="ribbon-btn" data-action="reorder-pages">
+                                <i data-lucide="move"></i>
+                                <span>Reorder</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="ribbon-group">
+                        <h3>Layout</h3>
+                        <div class="ribbon-buttons">
+                            <button class="ribbon-btn" data-action="add-watermark">
+                                <i data-lucide="stamp"></i>
+                                <span>Watermark</span>
+                            </button>
+                            <button class="ribbon-btn" data-action="add-header">
+                                <i data-lucide="heading"></i>
+                                <span>Header</span>
+                            </button>
+                            <button class="ribbon-btn" data-action="add-footer">
+                                <i data-lucide="align-bottom"></i>
+                                <span>Footer</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tools Tab -->
+                <div class="ribbon-panel" data-panel="tools">
+                    <div class="ribbon-group">
+                        <h3>Advanced</h3>
+                        <div class="ribbon-buttons">
+                            <button class="ribbon-btn" data-action="ocr-pdf">
+                                <i data-lucide="scan"></i>
+                                <span>OCR</span>
+                            </button>
+                            <button class="ribbon-btn" data-action="form-fill">
+                                <i data-lucide="file-check"></i>
+                                <span>Fill Forms</span>
+                            </button>
+                            <button class="ribbon-btn" data-action="sign-pdf">
+                                <i data-lucide="pen-tool"></i>
+                                <span>Sign</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="ribbon-group">
+                        <h3>Export</h3>
+                        <div class="ribbon-buttons">
+                            <button class="ribbon-btn" data-action="export-word">
+                                <i data-lucide="file-text"></i>
+                                <span>To Word</span>
+                            </button>
+                            <button class="ribbon-btn" data-action="export-html">
+                                <i data-lucide="code"></i>
+                                <span>To HTML</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Document Area -->
+            <div class="document-area">
+                <!-- Status Bar -->
+                <div class="status-bar">
+                    <div class="status-left">
+                        <span id="page-info">Page 1 of 1</span>
+                        <span id="zoom-level">100%</span>
+                    </div>
+                    <div class="status-right">
+                        <span id="file-info">No file open</span>
+                    </div>
+                </div>
+
+                <!-- Document Content -->
+                <div class="document-content">
+                    <!-- Home Page -->
+                    <section id="home" class="page active">
+                        <div class="welcome-screen">
+                            <div class="welcome-content">
+                                <h1>Welcome to PDF Dojo</h1>
+                                <p>Your professional PDF editing solution</p>
+                                <div class="quick-start-buttons">
+                                    <button class="btn btn-primary" data-action="open-pdf">
+                                        <i data-lucide="folder-open"></i>
+                                        Open PDF
+                                    </button>
+                                    <button class="btn btn-secondary" data-action="create-pdf">
+                                        <i data-lucide="file-plus"></i>
+                                        Create New PDF
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Editor Workspace -->
+                    <section id="edit" class="page">
+                        <div class="editor-workspace">
+                            <div class="drop-area" id="edit-drop-area">
+                                <div class="drop-content">
+                                    <i data-lucide="upload-cloud"></i>
+                                    <h3>Drop your PDF here</h3>
+                                    <p>or click to browse files</p>
+                                </div>
+                                <input type="file" id="edit-file-input" accept=".pdf" hidden>
+                            </div>
+                            
+                            <div class="pdf-viewer" id="pdf-viewer" style="display: none;">
+                                <div class="viewer-toolbar">
+                                    <div class="viewer-controls">
+                                        <button class="btn btn-sm" id="prev-page"><i data-lucide="chevron-left"></i></button>
+                                        <span id="page-counter">Page 1 of 1</span>
+                                        <button class="btn btn-sm" id="next-page"><i data-lucide="chevron-right"></i></button>
+                                    </div>
+                                    <div class="zoom-controls">
+                                        <button class="btn btn-sm" id="zoom-out"><i data-lucide="minus"></i></button>
+                                        <span id="zoom-display">100%</span>
+                                        <button class="btn btn-sm" id="zoom-in"><i data-lucide="plus"></i></button>
+                                    </div>
+                                </div>
+                                <div class="pdf-content" id="pdf-content"></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Other pages (merge, compress, etc.) -->
+                    <section id="merge" class="page">
+                        <div class="tool-page">
+                            <h2>Merge PDFs</h2>
+                            <div class="drop-area" id="merge-drop-area">
+                                <div class="drop-content">
+                                    <i data-lucide="files"></i>
+                                    <h3>Drop PDF files here</h3>
+                                    <p>Drag and drop multiple PDF files to merge them</p>
+                                </div>
+                                <input type="file" id="merge-file-input" multiple accept=".pdf" hidden>
+                            </div>
+                            <div class="file-list" id="merge-file-list"></div>
+                        </div>
+                    </section>
+
+                    <section id="compress" class="page">
+                        <div class="tool-page">
+                            <h2>Compress PDF</h2>
+                            <div class="drop-area" id="compress-drop-area">
+                                <div class="drop-content">
+                                    <i data-lucide="minimize-2"></i>
+                                    <h3>Drop a PDF here</h3>
+                                    <p>Select a PDF file to compress</p>
+                                </div>
+                                <input type="file" id="compress-file-input" accept=".pdf" hidden>
+                            </div>
+                            <div class="file-list" id="compress-file-list"></div>
+                        </div>
+                    </section>
+
+                    <section id="protect" class="page">
+                        <div class="tool-page">
+                            <h2>Protect PDF</h2>
+                            <div class="drop-area" id="protect-drop-area">
+                                <div class="drop-content">
+                                    <i data-lucide="shield"></i>
+                                    <h3>Drop a PDF here</h3>
+                                    <p>Select a PDF file to add password protection</p>
+                                </div>
+                                <input type="file" id="protect-file-input" accept=".pdf" hidden>
+                            </div>
+                            <div class="file-list" id="protect-file-list"></div>
+                            <div class="form-group">
+                                <label for="password-input">Password</label>
+                                <input type="password" id="password-input" placeholder="Enter password">
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="images" class="page">
+                        <div class="tool-page">
+                            <h2>Images to PDF</h2>
+                            <div class="drop-area" id="images-drop-area">
+                                <div class="drop-content">
+                                    <i data-lucide="image"></i>
+                                    <h3>Drop images here</h3>
+                                    <p>Select PNG, JPG, or JPEG images to convert to PDF</p>
+                                </div>
+                                <input type="file" id="images-file-input" multiple accept=".png,.jpg,.jpeg" hidden>
+                            </div>
+                            <div class="file-list" id="images-file-list"></div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <script src="renderer.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

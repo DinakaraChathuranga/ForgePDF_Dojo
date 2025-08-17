@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ForgePDF Dojo - Professional PDF Editor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+            <div class="logo">
+                    <div class="logo-icon">
+                        <img src="./assets/logo.png" alt="PDF Dojo" class="logo-image">
+                    </div>
+                    <div class="logo-text">
+                        <h1 class="logo-title">PDF Dojo</h1>
+                        <p class="logo-subtitle">by Forge</p>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Main</h3>
+                    <ul class="nav-list">
+                        <li><a href="#" class="nav-item active" data-page="home">
+                            <i data-lucide="home"></i>
+                            <span>Home</span>
+                        </a></li>
+                        <li><a href="#" class="nav-item" data-page="editor">
+                            <i data-lucide="edit-3"></i>
+                            <span>Editor</span>
+                        </a></li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Tools</h3>
+                    <ul class="nav-list">
+                        <li><a href="#" class="nav-item" data-page="merge">
+                            <i data-lucide="files"></i>
+                            <span>Merge PDFs</span>
+                        </a></li>
+                        <li><a href="#" class="nav-item" data-page="split">
+                            <i data-lucide="scissors"></i>
+                            <span>Split PDF</span>
+                        </a></li>
+                        <li><a href="#" class="nav-item" data-page="compress">
+                            <i data-lucide="minimize-2"></i>
+                            <span>Compress</span>
+                        </a></li>
+                        <li><a href="#" class="nav-item" data-page="protect">
+                            <i data-lucide="shield"></i>
+                            <span>Protect</span>
+                        </a></li>
+                        <li><a href="#" class="nav-item" data-page="convert">
+                            <i data-lucide="image"></i>
+                            <span>Convert</span>
+                        </a></li>
+                    </ul>
+            </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="footer-links">
+                    <a href="https://www.linkedin.com/company/forge-antropi/" target="_blank" class="footer-link">
+                        <i data-lucide="external-link"></i>
+                        <span>About Us</span>
+                    </a>
+                    <a href="mailto:pdfdojo@forgeantropi.com" class="footer-link">
+                        <i data-lucide="mail"></i>
+                        <span>Contact</span>
+                    </a>
+                </div>
+                <div class="app-version">v2.4.0</div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="top-bar">
+                <div class="top-bar-left">
+                    <h2 class="page-title" id="page-title">Home</h2>
+                </div>
+                <div class="top-bar-right">
+                    <div class="user-actions">
+                        <button class="action-btn" id="settings-btn" title="Settings">
+                            <i data-lucide="settings"></i>
+                        </button>
+                        <button class="action-btn" id="help-btn" title="Help">
+                            <i data-lucide="help-circle"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Toolbar -->
+            <div class="toolbar" id="toolbar">
+                <div class="toolbar-group" id="file-tools" style="display: none;">
+                    <button class="toolbar-btn" data-action="open-file">
+                        <i data-lucide="folder-open"></i>
+                        <span>Open</span>
+                    </button>
+                    <button class="toolbar-btn" data-action="save-file">
+                        <i data-lucide="save"></i>
+                        <span>Save</span>
+                    </button>
+                    <button class="toolbar-btn" data-action="save-as">
+                        <i data-lucide="save-as"></i>
+                        <span>Save As</span>
+                    </button>
+                </div>
+
+                <div class="toolbar-group" id="edit-tools" style="display: none;">
+                    <button class="toolbar-btn" data-action="undo">
+                        <i data-lucide="undo"></i>
+                        <span>Undo</span>
+                    </button>
+                    <button class="toolbar-btn" data-action="redo">
+                        <i data-lucide="redo"></i>
+                        <span>Redo</span>
+                    </button>
+                    <div class="toolbar-separator"></div>
+                    <button class="toolbar-btn" data-action="extract-text">
+                        <i data-lucide="type"></i>
+                        <span>Extract Text</span>
+                    </button>
+                    <button class="toolbar-btn" data-action="edit-text">
+                        <i data-lucide="edit-2"></i>
+                        <span>Edit Text</span>
+                    </button>
+                </div>
+
+                <div class="toolbar-group" id="page-tools" style="display: none;">
+                    <button class="toolbar-btn" data-action="rotate-left">
+                        <i data-lucide="rotate-ccw"></i>
+                        <span>Rotate Left</span>
+                    </button>
+                    <button class="toolbar-btn" data-action="rotate-right">
+                        <i data-lucide="rotate-cw"></i>
+                        <span>Rotate Right</span>
+                    </button>
+                    <div class="toolbar-separator"></div>
+                    <button class="toolbar-btn" data-action="delete-page">
+                        <i data-lucide="trash-2"></i>
+                        <span>Delete Page</span>
+                    </button>
+                    <button class="toolbar-btn" data-action="duplicate-page">
+                        <i data-lucide="copy"></i>
+                        <span>Duplicate</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Home Page -->
+            <section id="home" class="page active">
+                    <div class="home-container">
+                        <div class="welcome-section">
+                            <div class="welcome-content">
+                                <h1 class="welcome-title">Welcome to PDF Dojo</h1>
+                                <p class="welcome-subtitle">Professional PDF editing made simple</p>
+                            </div>
+                        </div>
+
+                        <div class="quick-actions">
+                            <div class="action-grid">
+                                <div class="action-card" data-action="open-pdf">
+                                    <div class="action-icon">
+                                        <i data-lucide="folder-open"></i>
+                                    </div>
+                                    <h3>Open PDF</h3>
+                                    <p>Open and edit existing PDF files</p>
+                                </div>
+
+                                <div class="action-card" data-action="create-pdf">
+                                    <div class="action-icon">
+                                        <i data-lucide="file-plus"></i>
+                                    </div>
+                                    <h3>Create PDF</h3>
+                                    <p>Create new PDF from scratch</p>
+                                </div>
+
+                                <div class="action-card" data-action="merge-pdfs">
+                                    <div class="action-icon">
+                                        <i data-lucide="files"></i>
+                                    </div>
+                                    <h3>Merge PDFs</h3>
+                                    <p>Combine multiple PDF files</p>
+                                </div>
+
+                                <div class="action-card" data-action="convert-images">
+                                    <div class="action-icon">
+                                        <i data-lucide="image"></i>
+                                    </div>
+                                    <h3>Convert Images</h3>
+                                    <p>Convert images to PDF format</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="recent-files">
+                            <h3>Recent Files</h3>
+                            <div class="recent-list" id="recent-files-list">
+                                <div class="empty-state">
+                                    <i data-lucide="file-text"></i>
+                                    <p>No recent files</p>
+                    </div>
+                    </div>
+                    </div>
+                </div>
+            </section>
+
+                <!-- Editor Page -->
+                <section id="editor" class="page">
+                    <div class="editor-container">
+                        <div class="editor-drop-zone" id="editor-drop-zone">
+                            <div class="drop-zone-content">
+                                <i data-lucide="upload-cloud"></i>
+                                <h3>Drop your PDF here</h3>
+                                <p>or click to browse files</p>
+                                <button class="btn btn-primary" id="browse-files-btn">Browse Files</button>
+                        </div>
+                            <input type="file" id="editor-file-input" accept=".pdf" hidden>
+                    </div>
+
+                        <div class="pdf-editor" id="pdf-editor" style="display: none;">
+                            <div class="editor-header">
+                                <div class="file-info">
+                                    <span class="file-name" id="current-file-name">document.pdf</span>
+                                    <span class="file-pages" id="file-pages">1 page</span>
+                            </div>
+                                <div class="editor-controls">
+                                    <button class="control-btn" id="prev-page-btn" disabled>
+                                        <i data-lucide="chevron-left"></i>
+                            </button>
+                                    <span class="page-info" id="page-info">Page 1 of 1</span>
+                                    <button class="control-btn" id="next-page-btn" disabled>
+                                        <i data-lucide="chevron-right"></i>
+                            </button>
+                                    <div class="zoom-controls">
+                                        <button class="control-btn" id="zoom-out-btn">
+                                            <i data-lucide="minus"></i>
+                            </button>
+                                        <span class="zoom-level" id="zoom-level">100%</span>
+                                        <button class="control-btn" id="zoom-in-btn">
+                                            <i data-lucide="plus"></i>
+                            </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pdf-viewer" id="pdf-viewer">
+                                <div class="pdf-content" id="pdf-content"></div>
+                            </div>
+                    </div>
+                </div>
+            </section>
+
+                <!-- Tool Pages -->
+            <section id="merge" class="page">
+                    <div class="tool-container">
+                        <div class="tool-header">
+                            <h2>Merge PDFs</h2>
+                            <p>Combine multiple PDF files into a single document</p>
+                    </div>
+                        <div class="tool-content">
+                            <div class="drop-zone" id="merge-drop-zone">
+                                <div class="drop-zone-content">
+                                    <i data-lucide="files"></i>
+                                    <h3>Drop PDF files here</h3>
+                                    <p>Drag and drop multiple PDF files to merge them</p>
+                                    <button class="btn btn-primary" id="merge-browse-btn">Select Files</button>
+                        </div>
+                        <input type="file" id="merge-file-input" multiple accept=".pdf" hidden>
+                    </div>
+                            <div class="file-list" id="merge-file-list"></div>
+                            <div class="tool-actions">
+                                <button class="btn btn-primary" id="merge-btn" disabled>Merge PDFs</button>
+                                <button class="btn btn-secondary" id="merge-clear-btn">Clear All</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="split" class="page">
+                    <div class="tool-container">
+                        <div class="tool-header">
+                            <h2>Split PDF</h2>
+                            <p>Split a PDF into multiple files</p>
+                        </div>
+                        <div class="tool-content">
+                            <div class="drop-zone" id="split-drop-zone">
+                                <div class="drop-zone-content">
+                                    <i data-lucide="scissors"></i>
+                                    <h3>Drop a PDF here</h3>
+                                    <p>Select a PDF file to split</p>
+                                    <button class="btn btn-primary" id="split-browse-btn">Select File</button>
+                                </div>
+                                <input type="file" id="split-file-input" accept=".pdf" hidden>
+                            </div>
+                            <div class="file-list" id="split-file-list"></div>
+                            <div class="split-options" id="split-options" style="display: none;">
+                                <h3>Split Options</h3>
+                                <div class="option-group">
+                                    <label>
+                                        <input type="radio" name="split-method" value="range" checked>
+                                        Split by page range
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="split-method" value="individual">
+                                        Split each page
+                                    </label>
+                                </div>
+                                <div class="range-input" id="range-input">
+                                    <label>Page Range (e.g., 1-3, 5, 7-9)</label>
+                                    <input type="text" id="page-range" placeholder="1-3, 5, 7-9">
+                                </div>
+                            </div>
+                            <div class="tool-actions">
+                                <button class="btn btn-primary" id="split-btn" disabled>Split PDF</button>
+                                <button class="btn btn-secondary" id="split-clear-btn">Clear</button>
+                    </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="compress" class="page">
+                    <div class="tool-container">
+                        <div class="tool-header">
+                            <h2>Compress PDF</h2>
+                            <p>Reduce PDF file size while maintaining quality</p>
+                    </div>
+                        <div class="tool-content">
+                            <div class="drop-zone" id="compress-drop-zone">
+                                <div class="drop-zone-content">
+                                    <i data-lucide="minimize-2"></i>
+                                    <h3>Drop a PDF here</h3>
+                                    <p>Select a PDF file to compress</p>
+                                    <button class="btn btn-primary" id="compress-browse-btn">Select File</button>
+                        </div>
+                        <input type="file" id="compress-file-input" accept=".pdf" hidden>
+                    </div>
+                            <div class="file-list" id="compress-file-list"></div>
+                            <div class="compression-options" id="compression-options" style="display: none;">
+                                <h3>Compression Level</h3>
+                                <div class="option-group">
+                                    <label>
+                                        <input type="radio" name="compression-level" value="low" checked>
+                                        Low (Better quality)
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="compression-level" value="medium">
+                                        Medium (Balanced)
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="compression-level" value="high">
+                                        High (Smaller size)
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="tool-actions">
+                                <button class="btn btn-primary" id="compress-btn" disabled>Compress PDF</button>
+                                <button class="btn btn-secondary" id="compress-clear-btn">Clear</button>
+                    </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="protect" class="page">
+                    <div class="tool-container">
+                        <div class="tool-header">
+                            <h2>Protect PDF</h2>
+                            <p>Add password protection to your PDF files</p>
+                    </div>
+                        <div class="tool-content">
+                            <div class="drop-zone" id="protect-drop-zone">
+                                <div class="drop-zone-content">
+                                    <i data-lucide="shield"></i>
+                                    <h3>Drop a PDF here</h3>
+                                    <p>Select a PDF file to protect</p>
+                                    <button class="btn btn-primary" id="protect-browse-btn">Select File</button>
+                        </div>
+                        <input type="file" id="protect-file-input" accept=".pdf" hidden>
+                    </div>
+                            <div class="file-list" id="protect-file-list"></div>
+                            <div class="protection-options" id="protection-options" style="display: none;">
+                                <h3>Protection Settings</h3>
+                                <div class="form-group">
+                                    <label for="password-input">Password</label>
+                                    <div class="password-input-group">
+                                        <input type="password" id="password-input" placeholder="Enter password">
+                                        <button class="password-toggle" id="password-toggle" type="button">
+                                            <i data-lucide="eye"></i>
+                                        </button>
+                                    </div>
+                    </div>
+                    <div class="form-group">
+                                    <label for="confirm-password-input">Confirm Password</label>
+                                    <div class="password-input-group">
+                                        <input type="password" id="confirm-password-input" placeholder="Confirm password">
+                                        <button class="password-toggle" id="confirm-password-toggle" type="button">
+                                            <i data-lucide="eye"></i>
+                                        </button>
+                                    </div>
+                        </div>
+                    </div>
+                            <div class="tool-actions">
+                                <button class="btn btn-primary" id="protect-btn" disabled>Protect PDF</button>
+                                <button class="btn btn-secondary" id="protect-clear-btn">Clear</button>
+                            </div>
+                    </div>
+                </div>
+            </section>
+
+                <section id="convert" class="page">
+                    <div class="tool-container">
+                        <div class="tool-header">
+                            <h2>Convert Files</h2>
+                            <p>Convert between different file formats</p>
+                        </div>
+                        <div class="tool-content">
+                            <div class="convert-tabs">
+                                <button class="convert-tab active" data-convert="images-to-pdf">Images to PDF</button>
+                                <button class="convert-tab" data-convert="pdf-to-images">PDF to Images</button>
+                            </div>
+                            
+                            <div class="convert-content" id="images-to-pdf">
+                                <div class="drop-zone" id="convert-drop-zone">
+                                    <div class="drop-zone-content">
+                                        <i data-lucide="image"></i>
+                                        <h3>Drop images here</h3>
+                                        <p>Select PNG, JPG, or JPEG images to convert to PDF</p>
+                                        <button class="btn btn-primary" id="convert-browse-btn">Select Images</button>
+                                    </div>
+                                    <input type="file" id="convert-file-input" multiple accept=".png,.jpg,.jpeg" hidden>
+                                </div>
+                                <div class="file-list" id="convert-file-list"></div>
+                            </div>
+
+                            <div class="convert-content" id="pdf-to-images" style="display: none;">
+                                <div class="drop-zone" id="pdf-to-images-drop-zone">
+                                    <div class="drop-zone-content">
+                                        <i data-lucide="file-text"></i>
+                                        <h3>Drop a PDF here</h3>
+                                        <p>Select a PDF file to convert to images</p>
+                                        <button class="btn btn-primary" id="pdf-to-images-browse-btn">Select PDF</button>
+                    </div>
+                                    <input type="file" id="pdf-to-images-file-input" accept=".pdf" hidden>
+                        </div>
+                                <div class="file-list" id="pdf-to-images-file-list"></div>
+                    </div>
+
+                            <div class="tool-actions">
+                                <button class="btn btn-primary" id="convert-btn" disabled>Convert</button>
+                                <button class="btn btn-secondary" id="convert-clear-btn">Clear</button>
+                    </div>
+                    </div>
+                </div>
+            </section>
+            </div>
+
+            <!-- Status Bar -->
+            <footer class="status-bar">
+                <div class="status-left">
+                    <span id="status-message">Ready</span>
+                </div>
+                <div class="status-right">
+                    <span id="file-size">No file</span>
+                    <span class="separator">|</span>
+                    <span id="zoom-status">100%</span>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <script src="../node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <script src="renderer.js"></script>
+</body>
+</html>

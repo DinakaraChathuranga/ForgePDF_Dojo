@@ -27,13 +27,18 @@
   "build": {
     "appId": "com.ForgeAntropi.pdftoolkit",
     "productName": "PDF Dojo",
+    "icon": "frontend/assets/logo.png",
+    
     "files": [
       "**/*",
       "!dist/",
       "!config/"
     ],
-    "asarUnpack": [
-      "./backend/**"
+    "extraResources": [
+      {
+        "from": "./backend",
+        "to": "backend"
+      }
     ],
     "win": {
       "target": "portable",
